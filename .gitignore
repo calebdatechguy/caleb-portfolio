@@ -1,0 +1,9 @@
+node_modules
+dist
+.vite
+src/assets/uploads/
+assets/uploads/
+
+# Backend
+backend/.env
+backend/drizzle/
