@@ -3,6 +3,7 @@ dist
 .vite
 src/assets/uploads/
 assets/uploads/
+.env
 
 # Backend
 backend/.env

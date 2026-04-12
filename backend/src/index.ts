@@ -16,7 +16,9 @@ app.get('/health', (c) => {
 //   return c.json(result)
 // })
 
+const port = Number(process.env.PORT) || 4001
+
 export default {
-  port: 4001,
+  port,
   fetch: app.fetch,
 }
