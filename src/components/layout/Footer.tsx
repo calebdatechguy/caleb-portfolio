@@ -104,13 +104,14 @@ export function Footer() {
                 <Linkedin className="w-4 h-4" />
                 LinkedIn
               </a>
-              <a
-                href="mailto:caleb@lykodigital.com"
-                className="flex items-center gap-2.5 text-sm text-muted-foreground hover:text-blue transition-colors"
+              <button
+                type="button"
+                onClick={() => { window.location.href = 'mailto:caleb@lykodigital.com' }}
+                className="flex items-center gap-2.5 text-sm text-muted-foreground hover:text-blue transition-colors text-left cursor-pointer"
               >
                 <Mail className="w-4 h-4" />
                 caleb@lykodigital.com
-              </a>
+              </button>
             </div>
           </div>
         </div>

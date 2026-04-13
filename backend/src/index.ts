@@ -1,13 +1,20 @@
 import { Hono } from 'hono'
 import { cors } from 'hono/cors'
-import { Resend } from 'resend'
+import nodemailer from 'nodemailer'
 
 const app = new Hono()
-const resend = new Resend(process.env.RESEND_API_KEY)
-
-const NOTIFY_EMAILS = ['calebelliott933@gmail.com', 'caleb@lykodigital.com']
 
 app.use('/*', cors())
+
+const transporter = nodemailer.createTransport({
+  host: 'smtp.zoho.com',
+  port: 465,
+  secure: true,
+  auth: {
+    user: process.env.ZOHO_EMAIL,
+    pass: process.env.ZOHO_PASSWORD,
+  },
+})
 
 app.get('/health', (c) => {
   return c.json({ status: 'ok', timestamp: new Date().toISOString() })
@@ -22,136 +29,149 @@ app.post('/api/contact', async (c) => {
       return c.json({ error: 'Missing required fields' }, 400)
     }
 
-    const serviceLabels: Record<string, string> = {
-      'wedding-film': 'Wedding Film',
-      'wedding-photo': 'Wedding Photography',
-      'commercial-video': 'Commercial / Brand Video',
-      'brand-photo': 'Brand Photography',
-      'web-design': 'Web Design & Development',
-      'brand-identity': 'Brand & Logo Design',
-      'other': 'Other / Not Sure',
-    }
+    const serviceLabel = service || 'Not specified'
+    const dateLabel = date || 'Not specified'
+    const budgetLabel = budget || 'Not specified'
 
-    const budgetLabels: Record<string, string> = {
-      'under-500': 'Under $500',
-      '500-1500': '$500 – $1,500',
-      '1500-5000': '$1,500 – $5,000',
-      '5000+': '$5,000+',
-    }
+    const submittedAt = new Date().toLocaleString('en-US', {
+      timeZone: 'America/New_York',
+      weekday: 'long',
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+      timeZoneName: 'short',
+    })
 
-    const html = `
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>New Contact Submission</title>
-</head>
-<body style="margin:0;padding:0;background:#0a0d1a;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;">
-  <table width="100%" cellpadding="0" cellspacing="0" style="background:#0a0d1a;padding:40px 0;">
-    <tr>
-      <td align="center">
-        <table width="600" cellpadding="0" cellspacing="0" style="max-width:600px;width:100%;">
-
-          <!-- Header -->
-          <tr>
-            <td style="background:#0f1e64;padding:36px 40px;">
-              <table width="100%" cellpadding="0" cellspacing="0">
-                <tr>
-                  <td>
-                    <p style="margin:0 0 4px 0;font-size:10px;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;color:#6c8fff;">Caleb Creative</p>
-                    <h1 style="margin:0;font-size:26px;font-weight:900;color:#ffffff;letter-spacing:-0.03em;">New Inquiry</h1>
-                  </td>
-                  <td align="right">
-                    <div style="width:44px;height:44px;background:#3d5afe;display:inline-block;"></div>
-                  </td>
-                </tr>
-              </table>
-            </td>
-          </tr>
-
-          <!-- Body -->
-          <tr>
-            <td style="background:#12152b;padding:36px 40px;">
-
-              <!-- From -->
-              <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:28px;">
-                <tr>
-                  <td style="border-left:3px solid #3d5afe;padding-left:16px;">
-                    <p style="margin:0 0 2px 0;font-size:10px;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;color:#6c8fff;">From</p>
-                    <p style="margin:0;font-size:20px;font-weight:800;color:#ffffff;">${name}</p>
-                    <p style="margin:4px 0 0 0;font-size:13px;color:#8892b0;"><a href="mailto:${email}" style="color:#6c8fff;text-decoration:none;">${email}</a></p>
-                  </td>
-                </tr>
-              </table>
-
-              <!-- Details grid -->
-              <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:28px;">
-                <tr>
-                  <td width="50%" style="padding-right:10px;padding-bottom:16px;vertical-align:top;">
-                    <div style="background:#1a1f3a;padding:16px 18px;">
-                      <p style="margin:0 0 6px 0;font-size:9px;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;color:#6c8fff;">Service</p>
-                      <p style="margin:0;font-size:14px;font-weight:600;color:#e8eaf6;">${service ? serviceLabels[service] ?? service : '—'}</p>
-                    </div>
-                  </td>
-                  <td width="50%" style="padding-left:10px;padding-bottom:16px;vertical-align:top;">
-                    <div style="background:#1a1f3a;padding:16px 18px;">
-                      <p style="margin:0 0 6px 0;font-size:9px;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;color:#6c8fff;">Budget</p>
-                      <p style="margin:0;font-size:14px;font-weight:600;color:#e8eaf6;">${budget ? budgetLabels[budget] ?? budget : '—'}</p>
-                    </div>
-                  </td>
-                </tr>
-                <tr>
-                  <td colspan="2">
-                    <div style="background:#1a1f3a;padding:16px 18px;">
-                      <p style="margin:0 0 6px 0;font-size:9px;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;color:#6c8fff;">Event / Project Date</p>
-                      <p style="margin:0;font-size:14px;font-weight:600;color:#e8eaf6;">${date || '—'}</p>
-                    </div>
-                  </td>
-                </tr>
-              </table>
-
-              <!-- Message -->
-              <table width="100%" cellpadding="0" cellspacing="0">
-                <tr>
-                  <td>
-                    <p style="margin:0 0 10px 0;font-size:9px;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;color:#6c8fff;">Message</p>
-                    <div style="background:#1a1f3a;padding:20px;border-left:3px solid #3d5afe;">
-                      <p style="margin:0;font-size:14px;line-height:1.7;color:#c8d0e8;white-space:pre-wrap;">${message.replace(/</g, '&lt;').replace(/>/g, '&gt;')}</p>
-                    </div>
-                  </td>
-                </tr>
-              </table>
-
-            </td>
-          </tr>
-
-          <!-- Footer -->
-          <tr>
-            <td style="background:#0a0d1a;padding:20px 40px;border-top:1px solid #1a1f3a;">
-              <p style="margin:0;font-size:11px;color:#3d4a6b;text-align:center;">Submitted via calebcrtv.com · Caleb Creative</p>
-            </td>
-          </tr>
-
-        </table>
-      </td>
-    </tr>
-  </table>
-</body>
-</html>`
-
-    await resend.emails.send({
-      from: 'Caleb Creative <onboarding@resend.dev>',
-      to: NOTIFY_EMAILS,
+    // --- Notification email to Caleb ---
+    await transporter.sendMail({
+      from: `"Caleb Creative" <${process.env.ZOHO_EMAIL}>`,
+      to: ['calebelliott933@gmail.com', 'caleb@lykodigital.com'],
       replyTo: email,
-      subject: `New Inquiry from ${name}${service ? ` — ${serviceLabels[service] ?? service}` : ''}`,
-      html,
+      subject: `New inquiry from ${name}`,
+      html: `
+        <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; color: #111;">
+          <div style="background: #0a0f2e; padding: 32px; margin-bottom: 0;">
+            <h1 style="color: #fff; font-size: 22px; margin: 0; letter-spacing: -0.02em;">CALEB CREATIVE</h1>
+            <p style="color: #4a6cf7; font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; margin: 4px 0 0;">New Contact Form Submission</p>
+          </div>
+          <div style="background: #f9f9f9; padding: 32px; border: 1px solid #e5e7eb;">
+            <table style="width: 100%; border-collapse: collapse;">
+              <tr>
+                <td style="padding: 10px 0; border-bottom: 1px solid #e5e7eb; color: #6b7280; font-size: 12px; text-transform: uppercase; letter-spacing: 0.1em; width: 140px;">Name</td>
+                <td style="padding: 10px 0; border-bottom: 1px solid #e5e7eb; font-size: 15px; font-weight: 600;">${name}</td>
+              </tr>
+              <tr>
+                <td style="padding: 10px 0; border-bottom: 1px solid #e5e7eb; color: #6b7280; font-size: 12px; text-transform: uppercase; letter-spacing: 0.1em;">Email</td>
+                <td style="padding: 10px 0; border-bottom: 1px solid #e5e7eb; font-size: 15px;"><a href="mailto:${email}" style="color: #4a6cf7;">${email}</a></td>
+              </tr>
+              <tr>
+                <td style="padding: 10px 0; border-bottom: 1px solid #e5e7eb; color: #6b7280; font-size: 12px; text-transform: uppercase; letter-spacing: 0.1em;">Service</td>
+                <td style="padding: 10px 0; border-bottom: 1px solid #e5e7eb; font-size: 15px;">${serviceLabel}</td>
+              </tr>
+              <tr>
+                <td style="padding: 10px 0; border-bottom: 1px solid #e5e7eb; color: #6b7280; font-size: 12px; text-transform: uppercase; letter-spacing: 0.1em;">Date</td>
+                <td style="padding: 10px 0; border-bottom: 1px solid #e5e7eb; font-size: 15px;">${dateLabel}</td>
+              </tr>
+              <tr>
+                <td style="padding: 10px 0; border-bottom: 1px solid #e5e7eb; color: #6b7280; font-size: 12px; text-transform: uppercase; letter-spacing: 0.1em;">Budget</td>
+                <td style="padding: 10px 0; border-bottom: 1px solid #e5e7eb; font-size: 15px;">${budgetLabel}</td>
+              </tr>
+              <tr>
+                <td style="padding: 16px 0 0; color: #6b7280; font-size: 12px; text-transform: uppercase; letter-spacing: 0.1em; vertical-align: top;">Message</td>
+                <td style="padding: 16px 0 0; font-size: 15px; line-height: 1.6; white-space: pre-wrap;">${message}</td>
+              </tr>
+            </table>
+            <div style="margin-top: 28px; padding-top: 20px; border-top: 1px solid #e5e7eb;">
+              <a href="mailto:${email}?subject=Re: Your inquiry" style="display: inline-block; background: #4a6cf7; color: #fff; text-decoration: none; padding: 12px 24px; font-size: 13px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;">Reply to ${name}</a>
+            </div>
+          </div>
+          <p style="color: #9ca3af; font-size: 11px; padding: 16px; text-align: center;">Caleb Creative · Georgia, USA · caleb@lykodigital.com</p>
+        </div>
+      `,
+    })
+
+    // --- Submission details email to Caleb (clean data sheet) ---
+    await transporter.sendMail({
+      from: `"Caleb Creative" <${process.env.ZOHO_EMAIL}>`,
+      to: ['calebelliott933@gmail.com', 'caleb@lykodigital.com'],
+      replyTo: email,
+      subject: `📋 Submission Details — ${name}`,
+      html: `
+        <div style="font-family: 'Courier New', Courier, monospace; max-width: 580px; margin: 0 auto; background: #fff; border: 2px solid #111; padding: 40px;">
+          <p style="font-size: 11px; text-transform: uppercase; letter-spacing: 0.25em; color: #888; margin: 0 0 4px;">Caleb Creative · Contact Form</p>
+          <h1 style="font-size: 22px; font-weight: 900; margin: 0 0 4px; letter-spacing: -0.01em; font-family: sans-serif;">Submission Details</h1>
+          <p style="font-size: 12px; color: #888; margin: 0 0 32px;">${submittedAt}</p>
+
+          <hr style="border: none; border-top: 2px solid #111; margin: 0 0 28px;" />
+
+          <table style="width: 100%; border-collapse: collapse; font-size: 14px;">
+            <tr style="vertical-align: top;">
+              <td style="padding: 10px 16px 10px 0; color: #888; white-space: nowrap; width: 120px;">NAME</td>
+              <td style="padding: 10px 0; font-weight: 700; color: #111;">${name}</td>
+            </tr>
+            <tr style="vertical-align: top; background: #f9f9f9;">
+              <td style="padding: 10px 16px 10px 0; color: #888; white-space: nowrap;">EMAIL</td>
+              <td style="padding: 10px 0;"><a href="mailto:${email}" style="color: #111; font-weight: 700;">${email}</a></td>
+            </tr>
+            <tr style="vertical-align: top;">
+              <td style="padding: 10px 16px 10px 0; color: #888; white-space: nowrap;">SERVICE</td>
+              <td style="padding: 10px 0; color: #111;">${serviceLabel}</td>
+            </tr>
+            <tr style="vertical-align: top; background: #f9f9f9;">
+              <td style="padding: 10px 16px 10px 0; color: #888; white-space: nowrap;">DATE</td>
+              <td style="padding: 10px 0; color: #111;">${dateLabel}</td>
+            </tr>
+            <tr style="vertical-align: top;">
+              <td style="padding: 10px 16px 10px 0; color: #888; white-space: nowrap;">BUDGET</td>
+              <td style="padding: 10px 0; color: #111;">${budgetLabel}</td>
+            </tr>
+          </table>
+
+          <hr style="border: none; border-top: 1px solid #ddd; margin: 20px 0;" />
+
+          <p style="font-size: 11px; text-transform: uppercase; letter-spacing: 0.15em; color: #888; margin: 0 0 10px;">Message</p>
+          <p style="font-size: 14px; line-height: 1.8; color: #111; margin: 0 0 32px; white-space: pre-wrap; background: #f9f9f9; padding: 16px; border-left: 3px solid #111;">${message}</p>
+
+          <hr style="border: none; border-top: 2px solid #111; margin: 0 0 20px;" />
+
+          <a href="mailto:${email}?subject=Re: Your inquiry" style="display: inline-block; background: #111; color: #fff; text-decoration: none; padding: 12px 28px; font-size: 12px; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; font-family: sans-serif;">Reply to ${name}</a>
+        </div>
+      `,
+    })
+
+    // --- Auto-reply to the person who submitted ---
+    await transporter.sendMail({
+      from: `"Caleb Elliott" <${process.env.ZOHO_EMAIL}>`,
+      to: [email],
+      subject: `Got your message, ${name.split(' ')[0]}!`,
+      html: `
+        <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; color: #111;">
+          <div style="background: #0a0f2e; padding: 32px;">
+            <h1 style="color: #fff; font-size: 22px; margin: 0; letter-spacing: -0.02em;">CALEB CREATIVE</h1>
+            <p style="color: #4a6cf7; font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; margin: 4px 0 0;">Film · Photo · Digital</p>
+          </div>
+          <div style="padding: 40px 32px; background: #fff; border: 1px solid #e5e7eb; border-top: none;">
+            <h2 style="font-size: 26px; font-weight: 900; letter-spacing: -0.02em; margin: 0 0 16px;">Message received.</h2>
+            <p style="color: #374151; font-size: 15px; line-height: 1.7; margin: 0 0 16px;">
+              Hey ${name.split(' ')[0]}, thanks for reaching out — I'll get back to you within 24–48 hours.
+            </p>
+            <p style="color: #374151; font-size: 15px; line-height: 1.7; margin: 0 0 32px;">
+              In the meantime, feel free to check out my latest work or follow along on Instagram.
+            </p>
+            <a href="https://calebcreative.com/portfolio" style="display: inline-block; background: #0a0f2e; color: #fff; text-decoration: none; padding: 12px 24px; font-size: 12px; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; margin-right: 12px;">View Portfolio</a>
+            <a href="https://instagram.com/calebcrtv" style="display: inline-block; border: 1px solid #0a0f2e; color: #0a0f2e; text-decoration: none; padding: 12px 24px; font-size: 12px; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase;">@calebcrtv</a>
+          </div>
+          <p style="color: #9ca3af; font-size: 11px; padding: 16px; text-align: center;">Caleb Creative · Georgia, USA · caleb@lykodigital.com</p>
+        </div>
+      `,
     })
 
     return c.json({ success: true })
   } catch (err) {
-    console.error('Contact email error:', err)
-    return c.json({ error: 'Failed to send email' }, 500)
+    console.error('Contact form error:', err)
+    return c.json({ error: 'Failed to send message' }, 500)
   }
 })
 

@@ -91,10 +91,10 @@ export function ContactPage() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(form),
       })
-      if (!res.ok) throw new Error('Failed')
+      if (!res.ok) throw new Error('Server error')
       setSubmitted(true)
     } catch {
-      setErrors({ message: 'Something went wrong. Please email caleb@lykodigital.com directly.' })
+      setErrors((prev) => ({ ...prev, message: 'Something went wrong — please try again or email me directly.' }))
     } finally {
       setSubmitting(false)
     }
@@ -193,7 +193,7 @@ export function ContactPage() {
                 <p className="text-muted-foreground text-sm">Tell me about your project — I'll reply in 24–48 hours.</p>
               </div>
 
-              <form onSubmit={handleSubmit} className="space-y-7 max-w-lg">
+              <form onSubmit={handleSubmit} noValidate className="space-y-7 max-w-lg">
                 {/* Name + Email */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                   <div className="space-y-2">
