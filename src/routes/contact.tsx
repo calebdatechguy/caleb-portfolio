@@ -86,7 +86,8 @@ export function ContactPage() {
     if (!validate()) return
     setSubmitting(true)
     try {
-      const res = await fetch('/api/contact', {
+      const base = import.meta.env.VITE_API_URL ?? ''
+      const res = await fetch(`${base}/api/contact`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(form),

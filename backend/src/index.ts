@@ -4,7 +4,17 @@ import nodemailer from 'nodemailer'
 
 const app = new Hono()
 
-app.use('/*', cors())
+app.use('/*', cors({
+  origin: (origin) => {
+    const allowed = [
+      'http://localhost:5173',
+      process.env.FRONTEND_URL ?? '',
+    ]
+    return allowed.includes(origin) ? origin : allowed[0]
+  },
+  allowHeaders: ['Content-Type'],
+  allowMethods: ['GET', 'POST', 'OPTIONS'],
+}))
 
 const transporter = nodemailer.createTransport({
   host: 'smtp.zoho.com',
