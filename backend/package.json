@@ -11,16 +11,13 @@
     "db:studio": "bunx drizzle-kit studio"
   },
   "dependencies": {
-    "dotenv": "^16.4.0",
-    "drizzle-orm": "^0.38.0",
     "hono": "^4.7.0",
-    "nodemailer": "^8.0.5",
+    "drizzle-orm": "^0.38.0",
     "postgres": "^3.4.0",
-    "resend": "^6.11.0"
+    "dotenv": "^16.4.0"
   },
   "devDependencies": {
-    "@types/bun": "^1.2.0",
-    "@types/nodemailer": "^8.0.0",
-    "drizzle-kit": "^0.30.0"
+    "drizzle-kit": "^0.30.0",
+    "@types/bun": "^1.2.0"
   }
 }
