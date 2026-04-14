@@ -41,6 +41,12 @@ const transporter = nodemailer.createTransport({
   },
 })
 
+const corsHeaders = {
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
+  'Access-Control-Allow-Headers': 'Content-Type',
+}
+
 async function handleContact(req: Request): Promise<Response> {
   try {
     const body = await req.json()
@@ -184,10 +190,10 @@ async function handleContact(req: Request): Promise<Response> {
       `,
     })
 
-    return Response.json({ success: true })
+    return Response.json({ success: true }, { headers: corsHeaders })
   } catch (err) {
     console.error('Contact form error:', err)
-    return Response.json({ error: 'Failed to send message' }, { status: 500 })
+    return Response.json({ error: 'Failed to send message' }, { status: 500, headers: corsHeaders })
   }
 }
 
@@ -198,6 +204,9 @@ Bun.serve({
     let pathname = decodeURIComponent(url.pathname)
 
     // API route
+    if (pathname === '/api/contact' && req.method === 'OPTIONS') {
+      return new Response(null, { status: 204, headers: corsHeaders })
+    }
     if (pathname === '/api/contact' && req.method === 'POST') {
       return handleContact(req)
     }
