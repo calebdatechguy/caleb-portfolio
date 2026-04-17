@@ -1,14 +1,7 @@
 import { Hono } from 'hono'
-import { cors } from 'hono/cors'
 import nodemailer from 'nodemailer'
 
 const app = new Hono()
-
-app.use('/*', cors({
-  origin: '*',
-  allowHeaders: ['Content-Type'],
-  allowMethods: ['GET', 'POST', 'OPTIONS'],
-}))
 
 const transporter = nodemailer.createTransport({
   host: 'smtp.zoho.com',
