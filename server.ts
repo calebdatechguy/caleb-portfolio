@@ -3,7 +3,7 @@
  * Handles /api/contact (nodemailer + Zoho SMTP) and serves dist/ for everything else.
  */
 import { join } from 'path'
-import nodemailer from 'nodemailer'
+import { Resend } from 'resend'
 
 const DIST = join(import.meta.dir, 'dist')
 const PORT = Number(process.env.PORT) || 3000
@@ -31,15 +31,7 @@ function mime(path: string): string {
   return mimeTypes[ext] ?? 'application/octet-stream'
 }
 
-const transporter = nodemailer.createTransport({
-  host: 'smtp.zoho.com',
-  port: 465,
-  secure: true,
-  auth: {
-    user: process.env.ZOHO_EMAIL,
-    pass: process.env.ZOHO_PASSWORD,
-  },
-})
+const resend = new Resend(process.env.RESEND_API_KEY)
 
 async function handleContact(req: Request): Promise<Response> {
   try {
@@ -53,8 +45,6 @@ async function handleContact(req: Request): Promise<Response> {
     const serviceLabel = service || 'Not specified'
     const dateLabel = date || 'Not specified'
     const budgetLabel = budget || 'Not specified'
-    const fromEmail = process.env.ZOHO_EMAIL ?? 'caleb@lykodigital.com'
-
     const submittedAt = new Date().toLocaleString('en-US', {
       timeZone: 'America/New_York',
       weekday: 'long',
@@ -67,10 +57,10 @@ async function handleContact(req: Request): Promise<Response> {
     })
 
     // Notification email
-    await transporter.sendMail({
-      from: `"Caleb Creative" <${fromEmail}>`,
+    await resend.emails.send({
+      from: 'Caleb Creative <onboarding@resend.dev>',
       to: ['calebelliott933@gmail.com', 'caleb@lykodigital.com'],
-      replyTo: email,
+      reply_to: email,
       subject: `New inquiry from ${name}`,
       html: `
         <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; color: #111;">
@@ -115,10 +105,10 @@ async function handleContact(req: Request): Promise<Response> {
     })
 
     // Submission details sheet
-    await transporter.sendMail({
-      from: `"Caleb Creative" <${fromEmail}>`,
+    await resend.emails.send({
+      from: 'Caleb Creative <onboarding@resend.dev>',
       to: ['calebelliott933@gmail.com', 'caleb@lykodigital.com'],
-      replyTo: email,
+      reply_to: email,
       subject: `📋 Submission Details — ${name}`,
       html: `
         <div style="font-family: 'Courier New', Courier, monospace; max-width: 580px; margin: 0 auto; background: #fff; border: 2px solid #111; padding: 40px;">
@@ -158,8 +148,8 @@ async function handleContact(req: Request): Promise<Response> {
     })
 
     // Auto-reply to submitter
-    await transporter.sendMail({
-      from: `"Caleb Elliott" <${fromEmail}>`,
+    await resend.emails.send({
+      from: 'Caleb Elliott <onboarding@resend.dev>',
       to: [email],
       subject: `Got your message, ${name.split(' ')[0]}!`,
       html: `
