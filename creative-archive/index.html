@@ -8,113 +8,399 @@
   <style>
     :root {
       --bg: #05070b;
-      --panel: rgba(12,16,24,.76);
-      --line: rgba(148,163,184,.16);
-      --text: #e7eefc;
-      --muted: #9fb0cc;
+      --panel: rgba(11, 15, 22, 0.92);
+      --panel-soft: rgba(255, 255, 255, 0.03);
+      --line: rgba(148, 163, 184, 0.16);
+      --line-strong: rgba(148, 163, 184, 0.28);
+      --text: #ecf3ff;
+      --muted: #97a7c2;
       --accent: #66e3ff;
-      --shadow: 0 30px 80px rgba(0,0,0,.45);
-      --max: 1500px;
-      --grid-gap: 18px;
+      --accent-2: #8b5cf6;
+      --shadow: 0 30px 80px rgba(0, 0, 0, 0.42);
+      --max: 980px;
       --mono: ui-monospace, SFMono-Regular, SF Mono, Menlo, Monaco, Consolas, Liberation Mono, monospace;
       --sans: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif;
     }
+
     * { box-sizing: border-box; }
     html, body { margin: 0; padding: 0; background: var(--bg); color: var(--text); font-family: var(--sans); }
+    html { scroll-behavior: smooth; }
     body {
       min-height: 100vh;
       background:
-        radial-gradient(circle at 20% 0%, rgba(102,227,255,.16), transparent 28%),
-        radial-gradient(circle at 82% 20%, rgba(139,92,246,.15), transparent 26%),
+        radial-gradient(circle at 20% 0%, rgba(102, 227, 255, 0.16), transparent 28%),
+        radial-gradient(circle at 82% 18%, rgba(139, 92, 246, 0.14), transparent 24%),
         linear-gradient(180deg, #05070b 0%, #070b12 42%, #05070b 100%);
       overflow-x: hidden;
     }
-    body::before { content:""; position: fixed; inset: 0; pointer-events:none; background-image: linear-gradient(rgba(255,255,255,.03) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.03) 1px, transparent 1px); background-size: 64px 64px; mask-image: linear-gradient(180deg, rgba(0,0,0,.6), transparent 86%); opacity:.38; z-index:0; }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background-image:
+        linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+      background-size: 64px 64px;
+      mask-image: linear-gradient(180deg, rgba(0, 0, 0, 0.6), transparent 86%);
+      opacity: 0.34;
+      z-index: 0;
+    }
+
     a { color: inherit; text-decoration: none; }
     button, input { font: inherit; }
-    .wrap { position: relative; z-index: 1; width: min(var(--max), calc(100vw - 32px)); margin: 0 auto; padding: 18px 0 42px; }
-    .topbar { position: sticky; top: 14px; z-index: 20; display: flex; align-items: center; justify-content: space-between; gap: 18px; padding: 16px 18px; margin-bottom: 18px; border: 1px solid var(--line); border-radius: 999px; background: rgba(5,7,11,.7); backdrop-filter: blur(18px); box-shadow: var(--shadow); }
-    .brand { display:flex; align-items:center; gap:14px; min-width:0; }
-    .brand-badge { width:42px; height:42px; border-radius:14px; display:grid; place-items:center; font-family:var(--mono); font-size:12px; letter-spacing:.16em; background: linear-gradient(135deg, rgba(102,227,255,.18), rgba(139,92,246,.18)); border: 1px solid rgba(102,227,255,.22); color: var(--text); }
-    .brand h1 { font-size:14px; letter-spacing:.12em; text-transform:uppercase; margin:0; }
-    .brand p { margin:3px 0 0; color:var(--muted); font-size:12px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
-    .top-actions { display:flex; align-items:center; gap:10px; flex-wrap:wrap; justify-content:flex-end; }
-    .pill, .chip, .btn { border:1px solid var(--line); background: rgba(255,255,255,.03); color: var(--text); border-radius:999px; transition:.2s ease; }
-    .pill { padding:10px 14px; font-size:12px; color:var(--muted); }
-    .pill strong { color:var(--text); }
-    .hero { margin:24px 0 18px; border:1px solid var(--line); border-radius:32px; overflow:hidden; background: linear-gradient(180deg, rgba(10,14,22,.92), rgba(6,8,13,.86)); box-shadow: var(--shadow); }
-    .hero-grid { display:grid; grid-template-columns: 1.2fr .8fr; gap:0; min-height:520px; }
-    .hero-copy { padding:46px; display:flex; flex-direction:column; justify-content:space-between; gap:28px; position:relative; }
-    .eyebrow { font-family:var(--mono); color:var(--accent); text-transform:uppercase; letter-spacing:.22em; font-size:11px; margin-bottom:14px; }
-    .hero h2 { margin:0; font-size: clamp(46px, 6vw, 88px); line-height:.94; letter-spacing:-.05em; max-width:11ch; }
-    .hero p.lead { margin:20px 0 0; max-width:62ch; font-size:18px; line-height:1.65; color:#c9d5e8; }
-    .hero-meta { display:flex; flex-wrap:wrap; gap:12px; margin-top:28px; }
-    .meta-card { flex:1 1 170px; min-width:150px; padding:14px 16px; border-radius:20px; background: rgba(255,255,255,.03); border:1px solid var(--line); }
-    .meta-card .k { display:block; color:var(--muted); font-size:11px; letter-spacing:.14em; text-transform:uppercase; margin-bottom:8px; font-family:var(--mono); }
-    .meta-card .v { font-size:18px; letter-spacing:-.03em; }
-    .hero-actions { display:flex; gap:10px; flex-wrap:wrap; margin-top:22px; }
-    .btn { padding:12px 16px; font-size:13px; display:inline-flex; align-items:center; gap:10px; cursor:pointer; }
-    .btn:hover, .chip:hover { transform: translateY(-1px); border-color: rgba(102,227,255,.42); }
-    .btn.primary { background: linear-gradient(135deg, rgba(102,227,255,.16), rgba(139,92,246,.18)); border-color: rgba(102,227,255,.26); }
-    .hero-side { padding:20px; border-left:1px solid var(--line); display:flex; flex-direction:column; gap:14px; background: rgba(255,255,255,.015); }
-    .featured { position:relative; flex:1 1 auto; overflow:hidden; border-radius:26px; border:1px solid var(--line); background:#09111c; }
-    .featured img { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; filter:saturate(1.08) contrast(1.03) brightness(.82); }
-    .featured .fade { position:absolute; inset:0; background: linear-gradient(180deg, rgba(7,10,16,.08), rgba(7,10,16,.7) 78%, rgba(7,10,16,.92)); }
-    .featured .label { position:absolute; top:16px; left:16px; padding:8px 11px; border-radius:999px; background: rgba(8,12,18,.72); border:1px solid rgba(255,255,255,.12); font-family:var(--mono); font-size:11px; letter-spacing:.16em; text-transform:uppercase; }
-    .featured .content { position:absolute; left:16px; right:16px; bottom:16px; display:grid; gap:8px; }
-    .featured h3 { margin:0; font-size:22px; line-height:1.03; letter-spacing:-.04em; }
-    .featured .caption { color:#d7e2f7; font-size:13px; line-height:1.5; max-width:42ch; }
-    .featured .tiny { display:flex; gap:8px; flex-wrap:wrap; color:var(--muted); font-family:var(--mono); font-size:11px; letter-spacing:.12em; text-transform:uppercase; }
-    .tiny span { padding:6px 9px; border-radius:999px; background: rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.08); }
-    .filters { display:grid; grid-template-columns:1fr auto; gap:14px; align-items:end; margin:18px 0 20px; padding:18px; border:1px solid var(--line); border-radius:24px; background: rgba(255,255,255,.02); backdrop-filter: blur(12px); }
-    .filters .left { display:flex; flex-direction:column; gap:10px; }
-    .filters .label { color:var(--muted); font-family:var(--mono); font-size:11px; letter-spacing:.18em; text-transform:uppercase; }
-    .search { width:min(680px, 100%); background: rgba(4,8,14,.75); color:var(--text); border:1px solid var(--line); border-radius:16px; padding:15px 16px; outline:none; }
-    .search::placeholder { color:#6f809c; }
-    .search:focus { border-color: rgba(102,227,255,.42); box-shadow:0 0 0 4px rgba(102,227,255,.08); }
-    .chips { display:flex; gap:8px; flex-wrap:wrap; justify-content:flex-end; }
-    .chip { padding:10px 12px; font-size:12px; color:var(--muted); cursor:pointer; white-space:nowrap; }
-    .chip.active { color:var(--text); border-color: rgba(102,227,255,.5); background: rgba(102,227,255,.1); }
-    .section-head { display:flex; align-items:center; justify-content:space-between; gap:18px; margin:18px 0 12px; }
-    .section-head h3 { margin:0; font-size:18px; letter-spacing:-.02em; }
-    .section-head .sub { color:var(--muted); font-size:13px; }
-    .grid { column-count: 3; column-gap: var(--grid-gap); }
-    @media (min-width: 1750px) { .grid { column-count: 4; } }
-    @media (max-width: 1400px) { .hero-grid { grid-template-columns:1fr; } .hero-side { border-left:0; border-top:1px solid var(--line); } }
-    @media (max-width: 960px) { .grid { column-count:2; } .topbar, .filters { border-radius:22px; } .hero-copy { padding:28px; } .hero h2 { max-width:100%; } .filters { grid-template-columns:1fr; } .chips { justify-content:flex-start; } }
-    @media (max-width: 640px) { .wrap { width:min(var(--max), calc(100vw - 20px)); } .grid { column-count:1; } .hero-grid { min-height:auto; } .hero-copy { padding:22px; } .hero p.lead { font-size:16px; } .section-head { align-items:flex-start; flex-direction:column; } }
-    .card { break-inside:avoid; margin:0 0 var(--grid-gap); border-radius:22px; overflow:hidden; border:1px solid var(--line); background:var(--panel); box-shadow:0 20px 55px rgba(0,0,0,.25); transition: transform .22s ease, border-color .22s ease, box-shadow .22s ease; cursor:pointer; position:relative; }
-    .card:hover { transform: translateY(-3px); border-color: rgba(102,227,255,.36); box-shadow:0 22px 70px rgba(0,0,0,.42); }
-    .thumb { position:relative; aspect-ratio: 4 / 5; overflow:hidden; background:#0a0e15; }
-    .thumb img { width:100%; height:100%; object-fit:cover; display:block; }
-    .thumb .overlay { position:absolute; inset:0; pointer-events:none; background: linear-gradient(180deg, rgba(0,0,0,.02), rgba(0,0,0,.1) 52%, rgba(0,0,0,.72)); }
-    .type-badge { position:absolute; top:12px; right:12px; padding:7px 10px; border-radius:999px; background: rgba(5,7,11,.72); border:1px solid rgba(255,255,255,.12); font-family:var(--mono); font-size:10px; text-transform:uppercase; letter-spacing:.16em; }
-    .card-body { padding:14px 14px 16px; display:grid; gap:10px; }
-    .card-top { display:flex; align-items:flex-start; justify-content:space-between; gap:12px; }
-    .card-title { font-size:15px; line-height:1.25; margin:0; letter-spacing:-.02em; }
-    .card-meta { color:var(--muted); font-size:12px; font-family:var(--mono); letter-spacing:.08em; text-transform:uppercase; }
-    .excerpt { color:#d0dbec; font-size:13px; line-height:1.55; margin:0; display:-webkit-box; -webkit-line-clamp:4; -webkit-box-orient:vertical; overflow:hidden; }
-    .tags { display:flex; flex-wrap:wrap; gap:6px; }
-    .tag { padding:6px 8px; border-radius:999px; border:1px solid rgba(255,255,255,.08); color:var(--muted); font-family:var(--mono); font-size:10px; letter-spacing:.14em; text-transform:uppercase; background:rgba(255,255,255,.03); }
-    .tag.accent { color:#c8f7ff; border-color: rgba(102,227,255,.2); background: rgba(102,227,255,.08); }
-    .footer { margin-top:28px; padding:22px 18px; border:1px solid var(--line); border-radius:24px; background: rgba(255,255,255,.02); display:flex; align-items:center; justify-content:space-between; gap:18px; flex-wrap:wrap; }
-    .footer .info { max-width:68ch; }
-    .footer h4 { margin:0 0 8px; font-size:20px; letter-spacing:-.03em; }
-    .footer p { margin:0; color:var(--muted); line-height:1.6; }
-    .modal { position:fixed; inset:0; z-index:50; display:none; align-items:center; justify-content:center; padding:18px; background: rgba(1,4,8,.84); backdrop-filter: blur(18px); }
-    .modal.open { display:flex; }
-    .modal-panel { width:min(1320px, 100%); max-height:min(94vh, 1180px); overflow:hidden; border-radius:28px; border:1px solid rgba(255,255,255,.12); background: linear-gradient(180deg, rgba(8,12,18,.98), rgba(5,7,11,.98)); box-shadow:0 40px 120px rgba(0,0,0,.6); display:grid; grid-template-columns:1.08fr .92fr; }
-    .modal-media { padding:18px; border-right:1px solid var(--line); overflow:auto; }
-    .modal-media img { width:100%; border-radius:18px; object-fit:cover; background:#0b1018; border:1px solid rgba(255,255,255,.08); }
-    .modal-side { padding:22px; overflow:auto; display:grid; gap:14px; }
-    .modal-side h3 { margin:0; font-size:30px; line-height:1.02; letter-spacing:-.04em; }
-    .modal-side .meta { display:flex; flex-wrap:wrap; gap:8px; color:var(--muted); font-family:var(--mono); font-size:11px; letter-spacing:.14em; text-transform:uppercase; }
-    .modal-side .story { color:#d4ddee; line-height:1.7; font-size:15px; white-space:pre-wrap; }
-    .modal-close { position:sticky; top:0; margin-left:auto; width:42px; height:42px; border-radius:999px; border:1px solid rgba(255,255,255,.12); background: rgba(255,255,255,.04); color:var(--text); cursor:pointer; }
-    .modal .nav { display:flex; gap:10px; flex-wrap:wrap; }
-    .ghost { background:transparent; }
-    .hidden { display:none !important; }
-    @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation:none !important; scroll-behavior:auto !important; transition:none !important; } }
+
+    .wrap {
+      position: relative;
+      z-index: 1;
+      width: min(var(--max), calc(100vw - 24px));
+      margin: 0 auto;
+      padding: 16px 0 56px;
+    }
+
+    .topbar {
+      position: sticky;
+      top: 12px;
+      z-index: 20;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 16px 18px;
+      margin-bottom: 18px;
+      border: 1px solid var(--line);
+      border-radius: 24px;
+      background: rgba(5, 7, 11, 0.72);
+      backdrop-filter: blur(18px);
+      box-shadow: var(--shadow);
+    }
+
+    .brand { display: flex; align-items: center; gap: 14px; min-width: 0; }
+    .brand-badge {
+      width: 42px; height: 42px; border-radius: 14px; flex: 0 0 auto;
+      display: grid; place-items: center; font-family: var(--mono); font-size: 12px; letter-spacing: 0.16em;
+      background: linear-gradient(135deg, rgba(102, 227, 255, 0.2), rgba(139, 92, 246, 0.18));
+      border: 1px solid rgba(102, 227, 255, 0.24);
+      color: var(--text);
+    }
+    .brand h1 { margin: 0; font-size: 14px; letter-spacing: 0.12em; text-transform: uppercase; }
+    .brand p {
+      margin: 4px 0 0;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.4;
+      max-width: 54ch;
+    }
+
+    .top-stats { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; justify-content: flex-end; }
+    .pill {
+      padding: 10px 12px;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      background: rgba(255, 255, 255, 0.03);
+      color: var(--muted);
+      font-size: 12px;
+      white-space: nowrap;
+    }
+    .pill strong { color: var(--text); }
+
+    .hero {
+      margin: 22px 0 18px;
+      border: 1px solid var(--line);
+      border-radius: 30px;
+      overflow: hidden;
+      background: linear-gradient(180deg, rgba(10, 14, 22, 0.92), rgba(6, 8, 13, 0.88));
+      box-shadow: var(--shadow);
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1.15fr 0.85fr;
+      gap: 0;
+      min-height: 420px;
+    }
+
+    .hero-copy {
+      padding: 40px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 24px;
+    }
+
+    .eyebrow {
+      color: var(--accent);
+      text-transform: uppercase;
+      letter-spacing: 0.22em;
+      font-size: 11px;
+      font-family: var(--mono);
+    }
+
+    .hero h2 {
+      margin: 14px 0 0;
+      font-size: clamp(42px, 6vw, 82px);
+      line-height: 0.94;
+      letter-spacing: -0.05em;
+      max-width: 10.5ch;
+    }
+
+    .hero p.lead {
+      margin: 18px 0 0;
+      max-width: 54ch;
+      font-size: 18px;
+      line-height: 1.65;
+      color: #c7d3e7;
+    }
+
+    .hero-actions { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 22px; }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 12px 16px;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      background: rgba(255, 255, 255, 0.03);
+      color: var(--text);
+      font-size: 13px;
+      cursor: pointer;
+      transition: transform 0.18s ease, border-color 0.18s ease, background 0.18s ease;
+    }
+    .btn:hover { transform: translateY(-1px); border-color: rgba(102, 227, 255, 0.38); }
+    .btn.primary {
+      background: linear-gradient(135deg, rgba(102, 227, 255, 0.16), rgba(139, 92, 246, 0.18));
+      border-color: rgba(102, 227, 255, 0.28);
+    }
+
+    .hero-meta {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+      margin-top: 28px;
+    }
+    .meta-card {
+      min-width: 0;
+      padding: 14px 16px;
+      border-radius: 20px;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid var(--line);
+    }
+    .meta-card .k {
+      display: block;
+      margin-bottom: 8px;
+      color: var(--muted);
+      font-size: 11px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      font-family: var(--mono);
+    }
+    .meta-card .v { font-size: 17px; letter-spacing: -0.02em; line-height: 1.25; }
+
+    .hero-side {
+      padding: 18px;
+      border-left: 1px solid var(--line);
+      background: rgba(255, 255, 255, 0.015);
+      display: flex;
+    }
+    .feature-card {
+      position: relative;
+      flex: 1 1 auto;
+      overflow: hidden;
+      border-radius: 24px;
+      border: 1px solid var(--line);
+      background: #09111c;
+      min-height: 100%;
+    }
+    .feature-card img {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      filter: saturate(1.06) contrast(1.03) brightness(0.82);
+    }
+    .feature-card .fade {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, rgba(7, 10, 16, 0.08), rgba(7, 10, 16, 0.7) 75%, rgba(7, 10, 16, 0.92));
+    }
+    .feature-card .content {
+      position: absolute;
+      left: 16px;
+      right: 16px;
+      bottom: 16px;
+      display: grid;
+      gap: 8px;
+    }
+    .feature-card .label {
+      display: inline-flex;
+      align-self: start;
+      padding: 7px 10px;
+      border-radius: 999px;
+      background: rgba(5, 7, 11, 0.72);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      width: fit-content;
+    }
+    .feature-card h3 { margin: 0; font-size: 22px; line-height: 1.05; letter-spacing: -0.04em; }
+    .feature-card .caption { color: #d7e2f7; font-size: 13px; line-height: 1.5; max-width: 42ch; }
+    .feature-card .tiny { display: flex; gap: 8px; flex-wrap: wrap; color: var(--muted); font-family: var(--mono); font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; }
+    .feature-card .tiny span { padding: 6px 9px; border-radius: 999px; background: rgba(255, 255, 255, 0.06); border: 1px solid rgba(255, 255, 255, 0.08); }
+
+    .section-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      margin: 18px 0 12px;
+    }
+    .section-head h3 { margin: 0; font-size: 18px; letter-spacing: -0.02em; }
+    .section-head .sub { color: var(--muted); font-size: 13px; line-height: 1.5; }
+
+    .feed {
+      display: grid;
+      gap: 16px;
+      scroll-snap-type: y proximity;
+    }
+
+    .post {
+      scroll-snap-align: start;
+      border-radius: 28px;
+      border: 1px solid var(--line);
+      background: var(--panel);
+      overflow: hidden;
+      box-shadow: 0 18px 40px rgba(0, 0, 0, 0.24);
+      cursor: pointer;
+      transition: transform 0.18s ease, border-color 0.18s ease, box-shadow 0.18s ease;
+    }
+    .post:hover {
+      transform: translateY(-2px);
+      border-color: rgba(102, 227, 255, 0.32);
+      box-shadow: 0 22px 60px rgba(0, 0, 0, 0.36);
+    }
+
+    .post-media { position: relative; background: #08101a; }
+    .post-media img { display: block; width: 100%; height: auto; max-height: 78vh; object-fit: cover; }
+    .post-badge {
+      position: absolute;
+      top: 14px;
+      left: 14px;
+      padding: 7px 10px;
+      border-radius: 999px;
+      background: rgba(5, 7, 11, 0.78);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+    }
+    .post-media::after {
+      content: "";
+      position: absolute;
+      inset: auto 0 0 0;
+      height: 110px;
+      background: linear-gradient(180deg, rgba(5, 7, 11, 0), rgba(5, 7, 11, 0.82));
+      pointer-events: none;
+    }
+
+    .post-body { padding: 16px 18px 18px; display: grid; gap: 12px; }
+    .post-meta { display: flex; gap: 10px; flex-wrap: wrap; color: var(--muted); font-family: var(--mono); font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; }
+    .post-meta span { padding: 5px 8px; border-radius: 999px; border: 1px solid rgba(255, 255, 255, 0.08); background: rgba(255, 255, 255, 0.02); }
+    .post h4 { margin: 0; font-size: 21px; line-height: 1.12; letter-spacing: -0.03em; }
+    .post p { margin: 0; color: #d3ddeb; line-height: 1.65; font-size: 15px; white-space: pre-wrap; }
+    .post-tags { display: flex; gap: 8px; flex-wrap: wrap; }
+    .tag {
+      padding: 7px 9px;
+      border-radius: 999px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      background: rgba(255, 255, 255, 0.03);
+      color: var(--muted);
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+    }
+    .tag.accent { color: #c8f7ff; border-color: rgba(102, 227, 255, 0.2); background: rgba(102, 227, 255, 0.08); }
+
+    .footer {
+      margin-top: 22px;
+      padding: 18px;
+      border-radius: 24px;
+      border: 1px solid var(--line);
+      background: rgba(255, 255, 255, 0.02);
+      color: var(--muted);
+      line-height: 1.6;
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+    .footer strong { color: var(--text); }
+
+    .modal {
+      position: fixed;
+      inset: 0;
+      z-index: 50;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+      background: rgba(1, 4, 8, 0.84);
+      backdrop-filter: blur(18px);
+    }
+    .modal.open { display: flex; }
+    .modal-panel {
+      width: min(1120px, 100%);
+      max-height: min(94vh, 1180px);
+      overflow: hidden;
+      border-radius: 28px;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      background: linear-gradient(180deg, rgba(8, 12, 18, 0.98), rgba(5, 7, 11, 0.98));
+      box-shadow: 0 40px 120px rgba(0, 0, 0, 0.62);
+      display: grid;
+      grid-template-columns: 1.02fr 0.98fr;
+    }
+    .modal-media { padding: 16px; border-right: 1px solid var(--line); overflow: auto; }
+    .modal-media img { width: 100%; display: block; border-radius: 18px; background: #0b1018; border: 1px solid rgba(255, 255, 255, 0.08); }
+    .modal-side { padding: 20px; overflow: auto; display: grid; gap: 14px; align-content: start; }
+    .modal-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; }
+    .modal-close {
+      width: 42px; height: 42px; border-radius: 999px; border: 1px solid rgba(255, 255, 255, 0.12);
+      background: rgba(255, 255, 255, 0.04); color: var(--text); cursor: pointer; flex: 0 0 auto;
+    }
+    .modal-top h3 { margin: 0; font-size: 30px; line-height: 1.04; letter-spacing: -0.04em; }
+    .modal-meta { display: flex; flex-wrap: wrap; gap: 8px; color: var(--muted); font-family: var(--mono); font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; }
+    .modal-meta span { padding: 6px 9px; border-radius: 999px; border: 1px solid rgba(255, 255, 255, 0.08); background: rgba(255, 255, 255, 0.03); }
+    .modal-story { color: #d4ddee; line-height: 1.7; font-size: 15px; white-space: pre-wrap; }
+
+    .hidden { display: none !important; }
+    @media (max-width: 960px) {
+      .wrap { width: min(var(--max), calc(100vw - 18px)); }
+      .hero-grid { grid-template-columns: 1fr; }
+      .hero-side { border-left: 0; border-top: 1px solid var(--line); min-height: 320px; }
+      .hero-copy { padding: 28px; }
+      .hero h2 { max-width: 100%; }
+      .hero-meta { grid-template-columns: 1fr; }
+      .modal-panel { grid-template-columns: 1fr; max-height: 95vh; }
+      .modal-media { border-right: 0; border-bottom: 1px solid var(--line); }
+    }
+    @media (max-width: 640px) {
+      .topbar { border-radius: 20px; align-items: flex-start; flex-direction: column; }
+      .post h4 { font-size: 18px; }
+      .post p { font-size: 14px; }
+      .section-head { flex-direction: column; align-items: flex-start; }
+      .hero-copy { padding: 22px; }
+      .hero p.lead { font-size: 16px; }
+      .footer { border-radius: 20px; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation: none !important; scroll-behavior: auto !important; transition: none !important; }
+    }
   </style>
 </head>
 <body>
@@ -124,10 +410,10 @@
         <div class="brand-badge">CCA</div>
         <div>
           <h1>Caleb Creative Archive</h1>
-          <p>Instagram work, reframed as a polished portfolio.</p>
+          <p>Instagram-era work, simplified into a feed-first archive that stays inside this site.</p>
         </div>
       </div>
-      <div class="top-actions">
+      <div class="top-stats">
         <div class="pill"><strong id="postsCount">—</strong> posts</div>
         <div class="pill"><strong id="mediaCount">—</strong> media assets</div>
         <div class="pill"><strong id="imgVidCount">—</strong> images / <strong id="vidOnlyCount">—</strong> videos</div>
@@ -138,159 +424,142 @@
       <div class="hero-grid">
         <div class="hero-copy">
           <div>
-            <div class="eyebrow" id="eyebrow">Creative archive • high-tech portfolio</div>
-            <h2 id="headline">Every distinct post, turned into a premium archive.</h2>
-            <p class="lead" id="lead">Loading archive copy…</p>
+            <div class="eyebrow" id="eyebrow">Creative archive • CMS-backed feed</div>
+            <h2 id="headline">Just scroll the work.</h2>
+            <p class="lead" id="lead">Loading archive content…</p>
             <div class="hero-actions">
-              <a class="btn primary" href="#archive">Jump to archive</a>
-              <a class="btn ghost" href="#contact">Contact</a>
+              <a class="btn primary" href="#archive">Jump to feed</a>
+              <button class="btn" id="scrollLatest" type="button">Latest post</button>
             </div>
           </div>
           <div class="hero-meta">
             <div class="meta-card"><span class="k">Archive scope</span><span class="v" id="scope">All distinct work once</span></div>
-            <div class="meta-card"><span class="k">Approach</span><span class="v" id="approach">Sequels are labeled, not doubled</span></div>
-            <div class="meta-card"><span class="k">Primary vibe</span><span class="v" id="vibe">Creative, dark, high-tech</span></div>
+            <div class="meta-card"><span class="k">Format</span><span class="v" id="approach">Single-column, Instagram-style scroll</span></div>
+            <div class="meta-card"><span class="k">Source</span><span class="v" id="vibe">Posts live in the site CMS feed</span></div>
           </div>
         </div>
         <div class="hero-side" id="featured"></div>
       </div>
     </section>
 
-    <section class="filters">
-      <div class="left">
-        <div class="label">Search captions / categories</div>
-        <input id="search" class="search" type="search" placeholder="Search by wedding, sports, brand, senior, recap, motivation..." />
-      </div>
-      <div class="chips" id="chips"></div>
-    </section>
-
     <div class="section-head" id="archive">
       <div>
-        <h3>Archive grid</h3>
-        <div class="sub">Click any card to open the poster and caption. The source data stays structured in JSON for easy updates.</div>
+        <h3>Archive feed</h3>
+        <div class="sub">Tap a post to open it on-site. No Instagram handoff. No extra clutter.</div>
       </div>
-      <div class="sub"><span id="resultCount">0</span> shown</div>
+      <div class="sub"><span id="resultCount">0</span> posts</div>
     </div>
 
-    <main class="grid" id="grid"></main>
+    <main class="feed" id="feed"></main>
 
-    <section class="footer" id="contact">
-      <div class="info">
-        <h4>Contact</h4>
-        <p>Want to book or collaborate? Reach out through Instagram: <strong id="handle">@calebcrtv</strong>. This archive is a public, optimized rebrand of the full feed.</p>
-      </div>
-      <div class="contact">
-        <a class="btn primary" id="openInstagram" target="_blank" rel="noreferrer">Open Instagram</a>
-        <button class="btn" id="copyHandle">Copy handle</button>
-      </div>
+    <section class="footer">
+      <div><strong>On-site only.</strong> Media stays inside the archive so the page remains useful even if social posts disappear.</div>
+      <div>Source: <strong>content/posts.json</strong></div>
     </section>
   </div>
 
   <div class="modal" id="modal" aria-hidden="true">
     <div class="modal-panel" role="dialog" aria-modal="true">
       <div class="modal-media">
-        <img id="modalPoster" alt="Archive poster" />
+        <img id="modalPoster" alt="Archive media" />
       </div>
       <div class="modal-side">
-        <button class="modal-close" id="modalClose" aria-label="Close">✕</button>
-        <div class="meta" id="modalMeta"></div>
-        <h3 id="modalTitle"></h3>
-        <div class="tags" id="modalTags"></div>
-        <div class="story" id="modalStory"></div>
-        <div class="nav">
-          <a class="btn primary" id="modalInstagram" target="_blank" rel="noreferrer">Open on Instagram</a>
-          <button class="btn" id="modalPrev">Prev</button>
-          <button class="btn" id="modalNext">Next</button>
+        <div class="modal-top">
+          <div>
+            <div class="modal-meta" id="modalMeta"></div>
+            <h3 id="modalTitle"></h3>
+          </div>
+          <button class="modal-close" id="modalClose" aria-label="Close">✕</button>
         </div>
+        <div class="post-tags" id="modalTags"></div>
+        <div class="modal-story" id="modalStory"></div>
       </div>
     </div>
   </div>
 
   <script>
-    const state = { category: 'All', query: '' };
     const dataUrl = './content/posts.json';
-    const grid = document.getElementById('grid');
-    const chips = document.getElementById('chips');
-    const search = document.getElementById('search');
-    const resultCount = document.getElementById('resultCount');
-    const featuredBox = document.getElementById('featured');
-
+    const feed = document.getElementById('feed');
+    const featured = document.getElementById('featured');
     const modal = document.getElementById('modal');
     const modalPoster = document.getElementById('modalPoster');
     const modalMeta = document.getElementById('modalMeta');
     const modalTitle = document.getElementById('modalTitle');
     const modalStory = document.getElementById('modalStory');
     const modalTags = document.getElementById('modalTags');
-    const modalInstagram = document.getElementById('modalInstagram');
     const modalClose = document.getElementById('modalClose');
-    const modalPrev = document.getElementById('modalPrev');
-    const modalNext = document.getElementById('modalNext');
     const postsCount = document.getElementById('postsCount');
     const mediaCount = document.getElementById('mediaCount');
     const imgVidCount = document.getElementById('imgVidCount');
     const vidOnlyCount = document.getElementById('vidOnlyCount');
+    const scrollLatest = document.getElementById('scrollLatest');
 
-    let POSTS = [];
     let CONTENT = null;
+    let POSTS = [];
     let currentIndex = 0;
 
-    function esc(s) { return String(s || '').replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m])); }
-
-    function renderChips() {
-      const categories = ['All', ...Object.keys(CONTENT.site.categories).sort((a,b)=>CONTENT.site.categories[b]-CONTENT.site.categories[a])];
-      chips.innerHTML = categories.map(cat => `<button class="chip ${state.category===cat ? 'active' : ''}" data-cat="${esc(cat)}">${esc(cat)}</button>`).join('');
-      chips.querySelectorAll('button').forEach(btn => btn.addEventListener('click', () => { state.category = btn.dataset.cat; render(); }));
+    function esc(s) {
+      return String(s || '').replace(/[&<>"']/g, (m) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[m]));
     }
 
-    function matches(item) {
-      const q = state.query.trim().toLowerCase();
-      const inCat = state.category === 'All' || item.category === state.category;
-      if (!inCat) return false;
-      if (!q) return true;
-      const blob = [item.caption, item.category, item.date, item.shortcode, item.media_count].join(' ').toLowerCase();
-      return blob.includes(q);
+    function titleFromCaption(item) {
+      const firstLine = String(item.caption || '').split('\n')[0].trim();
+      if (firstLine) return firstLine.length > 72 ? `${firstLine.slice(0, 71)}…` : firstLine;
+      return `${item.category} • ${item.date}`;
     }
 
-    function badgeFor(item) { return item.media_count > 1 ? `${item.media_count} frames` : (item.followup ? 'follow-up' : 'single'); }
+    function shortCaption(item) {
+      const text = String(item.excerpt || item.caption || '').replace(/\s+/g, ' ').trim();
+      return text.length > 320 ? `${text.slice(0, 319)}…` : text;
+    }
+
+    function badgeFor(item) {
+      if (item.media_count > 1) return `${item.media_count} frames`;
+      return item.followup ? 'follow-up' : 'single';
+    }
 
     function renderFeatured() {
-      const featured = CONTENT.site.featured.map(code => POSTS.find(p => p.shortcode === code)).filter(Boolean).slice(0, 4);
-      featuredBox.innerHTML = '';
-      if (!featured.length) return;
-      featuredBox.innerHTML = `
-        <article class="featured">
-          <img class="bg" src="${esc(featured[0].poster)}" alt="Featured work" loading="eager" />
-          <div class="fade"></div>
-          <div class="label">Featured ${esc(featured[0].category)}</div>
-          <div class="content">
-            <h3>${esc(featured[0].date)} • ${esc(featured[0].category)}</h3>
-            <div class="caption">${esc(featured[0].excerpt || 'Open the archive to view the full caption and poster.') }</div>
-            <div class="tiny"><span>${featured[0].media_count} asset${featured[0].media_count===1?'':'s'}</span><span>${featured[0].followup ? 'follow-up' : 'original'}</span><span>${esc(featured[0].shortcode)}</span></div>
-          </div>
-        </article>`;
-      if (featured.length > 1) {
-        const cards = featured.slice(1).map(item => `<div class="meta-card"><span class="k">${esc(item.category)}</span><span class="v">${esc(item.date)}</span></div>`).join('');
-        featuredBox.insertAdjacentHTML('beforeend', `<div class="hero-meta" style="padding-top:0; margin-top:0;">${cards}</div>`);
+      const codes = Array.isArray(CONTENT?.site?.featured) ? CONTENT.site.featured : [];
+      const item = POSTS.find((p) => codes.includes(p.shortcode)) || POSTS[0];
+      if (!item) {
+        featured.innerHTML = '';
+        return;
       }
+
+      featured.innerHTML = `
+        <article class="feature-card">
+          <img src="${esc(item.poster)}" alt="Featured archive post" loading="eager" />
+          <div class="fade"></div>
+          <div class="content">
+            <div class="label">Featured post</div>
+            <h3>${esc(titleFromCaption(item))}</h3>
+            <div class="caption">${esc(shortCaption(item))}</div>
+            <div class="tiny">
+              <span>${esc(item.category)}</span>
+              <span>${item.media_count} asset${item.media_count === 1 ? '' : 's'}</span>
+              <span>${esc(item.date)}</span>
+            </div>
+          </div>
+        </article>
+      `;
     }
 
-    function render() {
-      const filtered = POSTS.filter(matches);
-      resultCount.textContent = filtered.length;
-      grid.innerHTML = filtered.map((item) => `
-        <article class="card" data-index="${POSTS.indexOf(item)}">
-          <div class="thumb">
-            <img src="${esc(item.poster)}" alt="${esc(item.caption)}" loading="lazy" />
-            <div class="overlay"></div>
-            <div class="type-badge">${badgeFor(item)}</div>
+    function renderFeed() {
+      feed.innerHTML = POSTS.map((item, index) => `
+        <article class="post" data-index="${index}" tabindex="0" aria-label="Open post ${esc(item.category)} ${esc(item.date)}">
+          <div class="post-media">
+            <img src="${esc(item.poster)}" alt="${esc(titleFromCaption(item))}" loading="lazy" />
+            <div class="post-badge">${esc(badgeFor(item))}</div>
           </div>
-          <div class="card-body">
-            <div class="card-top">
-              <h4 class="card-title">${esc(item.category)} • ${esc(item.date)}</h4>
-              <div class="card-meta">${esc(item.shortcode)}</div>
+          <div class="post-body">
+            <div class="post-meta">
+              <span>${esc(item.date)}</span>
+              <span>${esc(item.category)}</span>
+              <span>${item.followup ? 'follow-up' : 'original'}</span>
             </div>
-            <p class="excerpt">${esc(item.excerpt || item.caption)}</p>
-            <div class="tags">
+            <h4>${esc(titleFromCaption(item))}</h4>
+            <p>${esc(shortCaption(item))}</p>
+            <div class="post-tags">
               <span class="tag accent">${esc(item.category)}</span>
               <span class="tag">${item.media_count} media</span>
               <span class="tag">${item.followup ? 'follow-up / sequel' : 'original post'}</span>
@@ -298,59 +567,90 @@
           </div>
         </article>
       `).join('');
-      grid.querySelectorAll('.card').forEach(card => card.addEventListener('click', () => openModal(parseInt(card.dataset.index, 10))));
+
+      feed.querySelectorAll('.post').forEach((card) => {
+        const open = () => openModal(parseInt(card.dataset.index, 10));
+        card.addEventListener('click', open);
+        card.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            open();
+          }
+        });
+      });
+
+      if (scrollLatest) {
+        scrollLatest.onclick = () => {
+          const first = feed.querySelector('.post');
+          first?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        };
+      }
     }
 
     function openModal(index) {
       currentIndex = index;
       const item = POSTS[index];
+      if (!item) return;
+
       modalPoster.src = item.poster;
-      modalMeta.innerHTML = `<span>${esc(item.date)}</span><span>${esc(item.category)}</span><span>${item.media_count} media</span><span>${item.followup ? 'follow-up' : 'original'}</span>`;
-      modalTitle.textContent = item.caption.split('\\n')[0] || `${item.category} • ${item.date}`;
-      modalStory.textContent = item.caption || 'No caption available.';
+      modalPoster.alt = titleFromCaption(item);
+      modalMeta.innerHTML = `
+        <span>${esc(item.date)}</span>
+        <span>${esc(item.category)}</span>
+        <span>${item.media_count} media</span>
+        <span>${item.followup ? 'follow-up' : 'original'}</span>
+      `;
+      modalTitle.textContent = titleFromCaption(item);
+      modalStory.textContent = String(item.caption || 'No caption available.');
       modalTags.innerHTML = `
         <span class="tag accent">${esc(item.category)}</span>
         <span class="tag">${esc(item.shortcode)}</span>
         <span class="tag">${item.media_count} media</span>
       `;
-      modalInstagram.href = `https://www.instagram.com/p/${item.shortcode}/`;
       modal.classList.add('open');
       modal.setAttribute('aria-hidden', 'false');
       document.body.style.overflow = 'hidden';
     }
-    function closeModal() { modal.classList.remove('open'); modal.setAttribute('aria-hidden', 'true'); document.body.style.overflow = ''; }
+
+    function closeModal() {
+      modal.classList.remove('open');
+      modal.setAttribute('aria-hidden', 'true');
+      document.body.style.overflow = '';
+    }
+
     modal.addEventListener('click', (e) => { if (e.target === modal) closeModal(); });
     modalClose.addEventListener('click', closeModal);
-    modalPrev.addEventListener('click', () => { currentIndex = (currentIndex - 1 + POSTS.length) % POSTS.length; openModal(currentIndex); });
-    modalNext.addEventListener('click', () => { currentIndex = (currentIndex + 1) % POSTS.length; openModal(currentIndex); });
-    document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeModal(); if (!modal.classList.contains('open')) return; if (e.key === 'ArrowLeft') modalPrev.click(); if (e.key === 'ArrowRight') modalNext.click(); });
-
-    search.addEventListener('input', () => { state.query = search.value; render(); });
-    document.getElementById('copyHandle').addEventListener('click', async () => { try { await navigator.clipboard.writeText(CONTENT.site.handle); alert('Copied ' + CONTENT.site.handle); } catch (e) { prompt('Copy handle', CONTENT.site.handle); } });
-
-    fetch(dataUrl).then(r => r.json()).then(data => {
-      CONTENT = data;
-      POSTS = data.posts;
-      document.title = data.site.title;
-      document.getElementById('eyebrow').textContent = data.site.hero.eyebrow;
-      document.getElementById('headline').textContent = data.site.hero.headline;
-      document.getElementById('lead').textContent = data.site.hero.lead;
-      document.getElementById('scope').textContent = data.site.hero.scope;
-      document.getElementById('approach').textContent = data.site.hero.approach;
-      document.getElementById('vibe').textContent = data.site.hero.vibe;
-      document.getElementById('handle').textContent = data.site.handle;
-      document.getElementById('openInstagram').href = data.site.contactUrl;
-      postsCount.textContent = data.site.stats.posts;
-      mediaCount.textContent = data.site.stats.media;
-      imgVidCount.textContent = data.site.stats.images;
-      vidOnlyCount.textContent = data.site.stats.videos;
-      renderChips();
-      renderFeatured();
-      render();
-    }).catch(err => {
-      console.error(err);
-      document.getElementById('lead').textContent = 'Failed to load archive content.';
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') closeModal();
     });
+
+    fetch(dataUrl)
+      .then((r) => r.json())
+      .then((data) => {
+        CONTENT = data;
+        POSTS = Array.isArray(data.posts) ? data.posts : [];
+
+        document.title = data.site?.title || 'Caleb Creative Archive';
+        document.getElementById('eyebrow').textContent = data.site?.hero?.eyebrow || 'Creative archive • CMS-backed feed';
+        document.getElementById('headline').textContent = data.site?.hero?.headline || 'Just scroll the work.';
+        document.getElementById('lead').textContent = data.site?.hero?.lead || 'Media lives on-site in a simple, scroll-first archive.';
+        document.getElementById('scope').textContent = data.site?.hero?.scope || 'All distinct work once';
+        document.getElementById('approach').textContent = data.site?.hero?.approach || 'Single-column, Instagram-style scroll';
+        document.getElementById('vibe').textContent = data.site?.hero?.vibe || 'Posts live in the site CMS feed';
+
+        postsCount.textContent = data.site?.stats?.posts ?? POSTS.length;
+        mediaCount.textContent = data.site?.stats?.media ?? POSTS.reduce((sum, p) => sum + (p.media_count || 1), 0);
+        imgVidCount.textContent = data.site?.stats?.images ?? '—';
+        vidOnlyCount.textContent = data.site?.stats?.videos ?? '—';
+        document.getElementById('resultCount').textContent = POSTS.length;
+
+        renderFeatured();
+        renderFeed();
+      })
+      .catch((err) => {
+        console.error(err);
+        document.getElementById('lead').textContent = 'Failed to load archive content.';
+      });
   </script>
 </body>
 </html>

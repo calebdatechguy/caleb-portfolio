@@ -1,3 +1,3 @@
 # Caleb Creative Archive
 
-Public archive build, content-driven from `content/posts.json`.
+Simple archive feed driven by `content/posts.json` and kept entirely on-site.

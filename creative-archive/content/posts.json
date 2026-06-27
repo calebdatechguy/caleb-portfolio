@@ -1,16 +1,15 @@
 {
   "site": {
     "title": "Caleb Creative Archive",
-    "subtitle": "Instagram archive rebuilt as a premium portfolio.",
+    "subtitle": "CMS-backed archive feed.",
     "handle": "@calebcrtv",
-    "contactUrl": "https://www.instagram.com/calebcrtv/",
     "hero": {
-      "eyebrow": "Creative archive • high-tech portfolio",
-      "headline": "Every distinct post, turned into a premium archive.",
-      "lead": "This page presents the full Instagram archive as a sleek, fast, content-driven portfolio. Cards stay social-native, while the framing is studio-grade: search, categories, captions, and contact in one place.",
+      "eyebrow": "Creative archive • CMS-backed feed",
+      "headline": "Just scroll the work.",
+      "lead": "This page keeps the archive stupid simple: a single-column feed with media stored and viewed on-site, so the archive still works even if the original social posts disappear.",
       "scope": "All distinct work once",
-      "approach": "Sequels are labeled, not doubled",
-      "vibe": "Creative, dark, high-tech"
+      "approach": "Single-column, Instagram-style scroll",
+      "vibe": "Posts live in the site CMS feed"
     },
     "stats": {
       "posts": 140,
