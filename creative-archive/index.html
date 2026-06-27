@@ -3,19 +3,16 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Caleb Creative Archive</title>
+  <title>Creative Archive</title>
   <meta name="color-scheme" content="dark" />
   <style>
     :root {
       --bg: #05070b;
-      --panel: rgba(11, 15, 22, 0.92);
-      --panel-soft: rgba(255, 255, 255, 0.03);
+      --panel: rgba(11, 15, 22, 0.94);
       --line: rgba(148, 163, 184, 0.16);
-      --line-strong: rgba(148, 163, 184, 0.28);
-      --text: #ecf3ff;
-      --muted: #97a7c2;
+      --text: #edf4ff;
+      --muted: #9caecc;
       --accent: #66e3ff;
-      --accent-2: #8b5cf6;
       --shadow: 0 30px 80px rgba(0, 0, 0, 0.42);
       --max: 980px;
       --mono: ui-monospace, SFMono-Regular, SF Mono, Menlo, Monaco, Consolas, Liberation Mono, monospace;
@@ -28,12 +25,10 @@
     body {
       min-height: 100vh;
       background:
-        radial-gradient(circle at 20% 0%, rgba(102, 227, 255, 0.16), transparent 28%),
-        radial-gradient(circle at 82% 18%, rgba(139, 92, 246, 0.14), transparent 24%),
-        linear-gradient(180deg, #05070b 0%, #070b12 42%, #05070b 100%);
+        radial-gradient(circle at 20% 0%, rgba(102, 227, 255, 0.12), transparent 26%),
+        linear-gradient(180deg, #05070b 0%, #070b12 44%, #05070b 100%);
       overflow-x: hidden;
     }
-
     body::before {
       content: "";
       position: fixed;
@@ -43,12 +38,12 @@
         linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
         linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
       background-size: 64px 64px;
-      mask-image: linear-gradient(180deg, rgba(0, 0, 0, 0.6), transparent 86%);
-      opacity: 0.34;
-      z-index: 0;
+      mask-image: linear-gradient(180deg, rgba(0, 0, 0, 0.62), transparent 86%);
+      opacity: 0.32;
     }
 
-    a { color: inherit; text-decoration: none; }
+    a, button { color: inherit; }
+    a { text-decoration: none; }
     button, input { font: inherit; }
 
     .wrap {
@@ -71,33 +66,27 @@
       margin-bottom: 18px;
       border: 1px solid var(--line);
       border-radius: 24px;
-      background: rgba(5, 7, 11, 0.72);
+      background: rgba(5, 7, 11, 0.76);
       backdrop-filter: blur(18px);
       box-shadow: var(--shadow);
     }
-
     .brand { display: flex; align-items: center; gap: 14px; min-width: 0; }
-    .brand-badge {
-      width: 42px; height: 42px; border-radius: 14px; flex: 0 0 auto;
-      display: grid; place-items: center; font-family: var(--mono); font-size: 12px; letter-spacing: 0.16em;
-      background: linear-gradient(135deg, rgba(102, 227, 255, 0.2), rgba(139, 92, 246, 0.18));
-      border: 1px solid rgba(102, 227, 255, 0.24);
-      color: var(--text);
+    .badge {
+      width: 42px; height: 42px; flex: 0 0 auto;
+      display: grid; place-items: center;
+      border-radius: 14px;
+      font-family: var(--mono); font-size: 12px; letter-spacing: 0.16em;
+      background: linear-gradient(135deg, rgba(102, 227, 255, 0.18), rgba(102, 227, 255, 0.08));
+      border: 1px solid rgba(102, 227, 255, 0.22);
     }
     .brand h1 { margin: 0; font-size: 14px; letter-spacing: 0.12em; text-transform: uppercase; }
-    .brand p {
-      margin: 4px 0 0;
-      color: var(--muted);
-      font-size: 12px;
-      line-height: 1.4;
-      max-width: 54ch;
-    }
+    .brand p { margin: 4px 0 0; color: var(--muted); font-size: 12px; line-height: 1.4; }
 
-    .top-stats { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; justify-content: flex-end; }
+    .stats { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; justify-content: flex-end; }
     .pill {
       padding: 10px 12px;
-      border-radius: 999px;
       border: 1px solid var(--line);
+      border-radius: 999px;
       background: rgba(255, 255, 255, 0.03);
       color: var(--muted);
       font-size: 12px;
@@ -113,22 +102,8 @@
       background: linear-gradient(180deg, rgba(10, 14, 22, 0.92), rgba(6, 8, 13, 0.88));
       box-shadow: var(--shadow);
     }
-
-    .hero-grid {
-      display: grid;
-      grid-template-columns: 1.15fr 0.85fr;
-      gap: 0;
-      min-height: 420px;
-    }
-
-    .hero-copy {
-      padding: 40px;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      gap: 24px;
-    }
-
+    .hero-grid { display: grid; grid-template-columns: 1.1fr 0.9fr; min-height: 400px; }
+    .hero-copy { padding: 38px; display: flex; flex-direction: column; justify-content: space-between; gap: 22px; }
     .eyebrow {
       color: var(--accent);
       text-transform: uppercase;
@@ -136,43 +111,17 @@
       font-size: 11px;
       font-family: var(--mono);
     }
-
-    .hero h2 {
-      margin: 14px 0 0;
-      font-size: clamp(42px, 6vw, 82px);
-      line-height: 0.94;
-      letter-spacing: -0.05em;
-      max-width: 10.5ch;
-    }
-
-    .hero p.lead {
-      margin: 18px 0 0;
-      max-width: 54ch;
-      font-size: 18px;
-      line-height: 1.65;
-      color: #c7d3e7;
-    }
-
+    .hero h2 { margin: 14px 0 0; font-size: clamp(40px, 5.8vw, 78px); line-height: 0.94; letter-spacing: -0.05em; max-width: 10ch; }
+    .hero p.lead { margin: 18px 0 0; max-width: 56ch; font-size: 18px; line-height: 1.65; color: #c7d3e7; }
     .hero-actions { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 22px; }
     .btn {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
-      padding: 12px 16px;
-      border-radius: 999px;
-      border: 1px solid var(--line);
-      background: rgba(255, 255, 255, 0.03);
-      color: var(--text);
-      font-size: 13px;
-      cursor: pointer;
+      display: inline-flex; align-items: center; justify-content: center;
+      padding: 12px 16px; border-radius: 999px; border: 1px solid var(--line);
+      background: rgba(255, 255, 255, 0.03); color: var(--text); cursor: pointer;
       transition: transform 0.18s ease, border-color 0.18s ease, background 0.18s ease;
     }
     .btn:hover { transform: translateY(-1px); border-color: rgba(102, 227, 255, 0.38); }
-    .btn.primary {
-      background: linear-gradient(135deg, rgba(102, 227, 255, 0.16), rgba(139, 92, 246, 0.18));
-      border-color: rgba(102, 227, 255, 0.28);
-    }
+    .btn.primary { background: linear-gradient(135deg, rgba(102, 227, 255, 0.16), rgba(102, 227, 255, 0.08)); border-color: rgba(102, 227, 255, 0.26); }
 
     .hero-meta {
       display: grid;
@@ -180,23 +129,9 @@
       gap: 12px;
       margin-top: 28px;
     }
-    .meta-card {
-      min-width: 0;
-      padding: 14px 16px;
-      border-radius: 20px;
-      background: rgba(255, 255, 255, 0.03);
-      border: 1px solid var(--line);
-    }
-    .meta-card .k {
-      display: block;
-      margin-bottom: 8px;
-      color: var(--muted);
-      font-size: 11px;
-      letter-spacing: 0.14em;
-      text-transform: uppercase;
-      font-family: var(--mono);
-    }
-    .meta-card .v { font-size: 17px; letter-spacing: -0.02em; line-height: 1.25; }
+    .meta-card { min-width: 0; padding: 14px 16px; border-radius: 20px; background: rgba(255, 255, 255, 0.03); border: 1px solid var(--line); }
+    .meta-card .k { display: block; margin-bottom: 8px; color: var(--muted); font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; font-family: var(--mono); }
+    .meta-card .v { font-size: 16px; letter-spacing: -0.02em; line-height: 1.25; }
 
     .hero-side {
       padding: 18px;
@@ -204,70 +139,36 @@
       background: rgba(255, 255, 255, 0.015);
       display: flex;
     }
-    .feature-card {
+    .feature {
       position: relative;
       flex: 1 1 auto;
-      overflow: hidden;
       border-radius: 24px;
+      overflow: hidden;
       border: 1px solid var(--line);
       background: #09111c;
-      min-height: 100%;
     }
-    .feature-card img {
-      position: absolute;
-      inset: 0;
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      filter: saturate(1.06) contrast(1.03) brightness(0.82);
+    .feature img {
+      position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;
+      filter: saturate(1.04) contrast(1.02) brightness(0.84);
     }
-    .feature-card .fade {
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(180deg, rgba(7, 10, 16, 0.08), rgba(7, 10, 16, 0.7) 75%, rgba(7, 10, 16, 0.92));
+    .feature .fade {
+      position: absolute; inset: 0;
+      background: linear-gradient(180deg, rgba(7, 10, 16, 0.06), rgba(7, 10, 16, 0.44) 70%, rgba(7, 10, 16, 0.82));
     }
-    .feature-card .content {
-      position: absolute;
-      left: 16px;
-      right: 16px;
-      bottom: 16px;
-      display: grid;
-      gap: 8px;
-    }
-    .feature-card .label {
-      display: inline-flex;
-      align-self: start;
-      padding: 7px 10px;
-      border-radius: 999px;
-      background: rgba(5, 7, 11, 0.72);
-      border: 1px solid rgba(255, 255, 255, 0.12);
-      font-family: var(--mono);
-      font-size: 11px;
-      letter-spacing: 0.16em;
-      text-transform: uppercase;
-      width: fit-content;
-    }
-    .feature-card h3 { margin: 0; font-size: 22px; line-height: 1.05; letter-spacing: -0.04em; }
-    .feature-card .caption { color: #d7e2f7; font-size: 13px; line-height: 1.5; max-width: 42ch; }
-    .feature-card .tiny { display: flex; gap: 8px; flex-wrap: wrap; color: var(--muted); font-family: var(--mono); font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; }
-    .feature-card .tiny span { padding: 6px 9px; border-radius: 999px; background: rgba(255, 255, 255, 0.06); border: 1px solid rgba(255, 255, 255, 0.08); }
+    .feature .content { position: absolute; left: 16px; right: 16px; bottom: 16px; display: grid; gap: 8px; }
+    .feature h3 { margin: 0; font-size: 22px; line-height: 1.05; letter-spacing: -0.04em; }
+    .feature .caption { color: #d7e2f7; font-size: 13px; line-height: 1.5; max-width: 42ch; }
+    .feature .tiny { display: flex; gap: 8px; flex-wrap: wrap; color: var(--muted); font-family: var(--mono); font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; }
+    .feature .tiny span { padding: 6px 9px; border-radius: 999px; background: rgba(255, 255, 255, 0.06); border: 1px solid rgba(255, 255, 255, 0.08); }
 
     .section-head {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 16px;
+      display: flex; align-items: center; justify-content: space-between; gap: 16px;
       margin: 18px 0 12px;
     }
     .section-head h3 { margin: 0; font-size: 18px; letter-spacing: -0.02em; }
     .section-head .sub { color: var(--muted); font-size: 13px; line-height: 1.5; }
 
-    .feed {
-      display: grid;
-      gap: 16px;
-      scroll-snap-type: y proximity;
-    }
-
+    .feed { display: grid; gap: 16px; scroll-snap-type: y proximity; }
     .post {
       scroll-snap-align: start;
       border-radius: 28px;
@@ -278,54 +179,26 @@
       cursor: pointer;
       transition: transform 0.18s ease, border-color 0.18s ease, box-shadow 0.18s ease;
     }
-    .post:hover {
-      transform: translateY(-2px);
-      border-color: rgba(102, 227, 255, 0.32);
-      box-shadow: 0 22px 60px rgba(0, 0, 0, 0.36);
-    }
-
+    .post:hover { transform: translateY(-2px); border-color: rgba(102, 227, 255, 0.32); box-shadow: 0 22px 60px rgba(0, 0, 0, 0.36); }
     .post-media { position: relative; background: #08101a; }
     .post-media img { display: block; width: 100%; height: auto; max-height: 78vh; object-fit: cover; }
     .post-badge {
-      position: absolute;
-      top: 14px;
-      left: 14px;
-      padding: 7px 10px;
-      border-radius: 999px;
-      background: rgba(5, 7, 11, 0.78);
-      border: 1px solid rgba(255, 255, 255, 0.12);
-      font-family: var(--mono);
-      font-size: 10px;
-      letter-spacing: 0.16em;
-      text-transform: uppercase;
+      position: absolute; top: 14px; left: 14px;
+      padding: 7px 10px; border-radius: 999px;
+      background: rgba(5, 7, 11, 0.78); border: 1px solid rgba(255, 255, 255, 0.12);
+      font-family: var(--mono); font-size: 10px; letter-spacing: 0.16em; text-transform: uppercase;
     }
     .post-media::after {
       content: "";
-      position: absolute;
-      inset: auto 0 0 0;
-      height: 110px;
-      background: linear-gradient(180deg, rgba(5, 7, 11, 0), rgba(5, 7, 11, 0.82));
+      position: absolute; inset: auto 0 0 0; height: 96px;
+      background: linear-gradient(180deg, rgba(5, 7, 11, 0), rgba(5, 7, 11, 0.8));
       pointer-events: none;
     }
-
     .post-body { padding: 16px 18px 18px; display: grid; gap: 12px; }
     .post-meta { display: flex; gap: 10px; flex-wrap: wrap; color: var(--muted); font-family: var(--mono); font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; }
     .post-meta span { padding: 5px 8px; border-radius: 999px; border: 1px solid rgba(255, 255, 255, 0.08); background: rgba(255, 255, 255, 0.02); }
     .post h4 { margin: 0; font-size: 21px; line-height: 1.12; letter-spacing: -0.03em; }
     .post p { margin: 0; color: #d3ddeb; line-height: 1.65; font-size: 15px; white-space: pre-wrap; }
-    .post-tags { display: flex; gap: 8px; flex-wrap: wrap; }
-    .tag {
-      padding: 7px 9px;
-      border-radius: 999px;
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      background: rgba(255, 255, 255, 0.03);
-      color: var(--muted);
-      font-family: var(--mono);
-      font-size: 10px;
-      letter-spacing: 0.14em;
-      text-transform: uppercase;
-    }
-    .tag.accent { color: #c8f7ff; border-color: rgba(102, 227, 255, 0.2); background: rgba(102, 227, 255, 0.08); }
 
     .footer {
       margin-top: 22px;
@@ -335,42 +208,45 @@
       background: rgba(255, 255, 255, 0.02);
       color: var(--muted);
       line-height: 1.6;
-      display: flex;
-      justify-content: space-between;
-      gap: 16px;
-      flex-wrap: wrap;
+      display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap;
     }
     .footer strong { color: var(--text); }
 
     .modal {
-      position: fixed;
-      inset: 0;
-      z-index: 50;
-      display: none;
-      align-items: center;
-      justify-content: center;
-      padding: 16px;
-      background: rgba(1, 4, 8, 0.84);
-      backdrop-filter: blur(18px);
+      position: fixed; inset: 0; z-index: 50; display: none;
+      align-items: center; justify-content: center; padding: 16px;
+      background: rgba(1, 4, 8, 0.84); backdrop-filter: blur(18px);
     }
     .modal.open { display: flex; }
     .modal-panel {
-      width: min(1120px, 100%);
-      max-height: min(94vh, 1180px);
-      overflow: hidden;
-      border-radius: 28px;
+      width: min(1120px, 100%); max-height: min(94vh, 1180px);
+      overflow: hidden; border-radius: 28px;
       border: 1px solid rgba(255, 255, 255, 0.12);
       background: linear-gradient(180deg, rgba(8, 12, 18, 0.98), rgba(5, 7, 11, 0.98));
       box-shadow: 0 40px 120px rgba(0, 0, 0, 0.62);
-      display: grid;
-      grid-template-columns: 1.02fr 0.98fr;
+      display: grid; grid-template-columns: 1.02fr 0.98fr;
     }
-    .modal-media { padding: 16px; border-right: 1px solid var(--line); overflow: auto; }
-    .modal-media img { width: 100%; display: block; border-radius: 18px; background: #0b1018; border: 1px solid rgba(255, 255, 255, 0.08); }
+    .modal-media { position: relative; padding: 16px; border-right: 1px solid var(--line); overflow: auto; display: grid; place-items: center; }
+    .modal-stage { width: 100%; min-height: 280px; display: grid; place-items: center; }
+    .modal-stage img, .modal-stage video {
+      width: 100%; max-height: 100%; display: block;
+      border-radius: 18px; background: #0b1018;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      object-fit: contain;
+    }
+    .modal-stage video { background: #000; }
+    .modal-nav {
+      position: absolute; top: 50%; transform: translateY(-50%); z-index: 2;
+      width: 40px; height: 40px; border-radius: 999px;
+      border: 1px solid rgba(255, 255, 255, 0.14); background: rgba(5, 7, 11, 0.64); color: var(--text); cursor: pointer;
+    }
+    .modal-prev { left: 16px; }
+    .modal-next { right: 16px; }
     .modal-side { padding: 20px; overflow: auto; display: grid; gap: 14px; align-content: start; }
     .modal-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; }
     .modal-close {
-      width: 42px; height: 42px; border-radius: 999px; border: 1px solid rgba(255, 255, 255, 0.12);
+      width: 42px; height: 42px; border-radius: 999px;
+      border: 1px solid rgba(255, 255, 255, 0.12);
       background: rgba(255, 255, 255, 0.04); color: var(--text); cursor: pointer; flex: 0 0 auto;
     }
     .modal-top h3 { margin: 0; font-size: 30px; line-height: 1.04; letter-spacing: -0.04em; }
@@ -378,9 +254,7 @@
     .modal-meta span { padding: 6px 9px; border-radius: 999px; border: 1px solid rgba(255, 255, 255, 0.08); background: rgba(255, 255, 255, 0.03); }
     .modal-story { color: #d4ddee; line-height: 1.7; font-size: 15px; white-space: pre-wrap; }
 
-    .hidden { display: none !important; }
     @media (max-width: 960px) {
-      .wrap { width: min(var(--max), calc(100vw - 18px)); }
       .hero-grid { grid-template-columns: 1fr; }
       .hero-side { border-left: 0; border-top: 1px solid var(--line); min-height: 320px; }
       .hero-copy { padding: 28px; }
@@ -407,13 +281,13 @@
   <div class="wrap">
     <header class="topbar">
       <div class="brand">
-        <div class="brand-badge">CCA</div>
+        <div class="badge">ARCHIVE</div>
         <div>
-          <h1>Caleb Creative Archive</h1>
-          <p>Instagram-era work, simplified into a feed-first archive that stays inside this site.</p>
+          <h1>Creative archive</h1>
+          <p>Scroll the work. Swipe media. Stay on-site.</p>
         </div>
       </div>
-      <div class="top-stats">
+      <div class="stats">
         <div class="pill"><strong id="postsCount">—</strong> posts</div>
         <div class="pill"><strong id="mediaCount">—</strong> media assets</div>
         <div class="pill"><strong id="imgVidCount">—</strong> images / <strong id="vidOnlyCount">—</strong> videos</div>
@@ -424,7 +298,7 @@
       <div class="hero-grid">
         <div class="hero-copy">
           <div>
-            <div class="eyebrow" id="eyebrow">Creative archive • CMS-backed feed</div>
+            <div class="eyebrow" id="eyebrow">Creative archive • feed-first</div>
             <h2 id="headline">Just scroll the work.</h2>
             <p class="lead" id="lead">Loading archive content…</p>
             <div class="hero-actions">
@@ -434,8 +308,8 @@
           </div>
           <div class="hero-meta">
             <div class="meta-card"><span class="k">Archive scope</span><span class="v" id="scope">All distinct work once</span></div>
-            <div class="meta-card"><span class="k">Format</span><span class="v" id="approach">Single-column, Instagram-style scroll</span></div>
-            <div class="meta-card"><span class="k">Source</span><span class="v" id="vibe">Posts live in the site CMS feed</span></div>
+            <div class="meta-card"><span class="k">Format</span><span class="v" id="approach">Single-column scroll with swipe media</span></div>
+            <div class="meta-card"><span class="k">Source</span><span class="v" id="vibe">CMS-driven, on-site only</span></div>
           </div>
         </div>
         <div class="hero-side" id="featured"></div>
@@ -445,7 +319,7 @@
     <div class="section-head" id="archive">
       <div>
         <h3>Archive feed</h3>
-        <div class="sub">Tap a post to open it on-site. No Instagram handoff. No extra clutter.</div>
+        <div class="sub">Tap a post to open it on-site. Swipe through media when available.</div>
       </div>
       <div class="sub"><span id="resultCount">0</span> posts</div>
     </div>
@@ -454,14 +328,16 @@
 
     <section class="footer">
       <div><strong>On-site only.</strong> Media stays inside the archive so the page remains useful even if social posts disappear.</div>
-      <div>Source: <strong>content/posts.json</strong></div>
+      <div><strong>Source:</strong> content/posts.json</div>
     </section>
   </div>
 
   <div class="modal" id="modal" aria-hidden="true">
     <div class="modal-panel" role="dialog" aria-modal="true">
       <div class="modal-media">
-        <img id="modalPoster" alt="Archive media" />
+        <button class="modal-nav modal-prev" id="modalPrev" aria-label="Previous media or post">‹</button>
+        <div class="modal-stage" id="modalStage"></div>
+        <button class="modal-nav modal-next" id="modalNext" aria-label="Next media or post">›</button>
       </div>
       <div class="modal-side">
         <div class="modal-top">
@@ -471,7 +347,6 @@
           </div>
           <button class="modal-close" id="modalClose" aria-label="Close">✕</button>
         </div>
-        <div class="post-tags" id="modalTags"></div>
         <div class="modal-story" id="modalStory"></div>
       </div>
     </div>
@@ -482,12 +357,13 @@
     const feed = document.getElementById('feed');
     const featured = document.getElementById('featured');
     const modal = document.getElementById('modal');
-    const modalPoster = document.getElementById('modalPoster');
+    const modalStage = document.getElementById('modalStage');
     const modalMeta = document.getElementById('modalMeta');
     const modalTitle = document.getElementById('modalTitle');
     const modalStory = document.getElementById('modalStory');
-    const modalTags = document.getElementById('modalTags');
     const modalClose = document.getElementById('modalClose');
+    const modalPrev = document.getElementById('modalPrev');
+    const modalNext = document.getElementById('modalNext');
     const postsCount = document.getElementById('postsCount');
     const mediaCount = document.getElementById('mediaCount');
     const imgVidCount = document.getElementById('imgVidCount');
@@ -497,25 +373,53 @@
     let CONTENT = null;
     let POSTS = [];
     let currentIndex = 0;
+    let currentMediaIndex = 0;
+    let swipeStartX = null;
 
     function esc(s) {
       return String(s || '').replace(/[&<>"']/g, (m) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[m]));
     }
 
+    function cleanText(value) {
+      return String(value || '')
+        .replace(/^(caleb creative archive|instagram archive rebuilt as a premium portfolio\.?|creative archive\s*[•-]\s*high-tech portfolio\.?)/i, '')
+        .replace(/^\s*[•-]\s*/, '')
+        .trim();
+    }
+
     function titleFromCaption(item) {
-      const firstLine = String(item.caption || '').split('\n')[0].trim();
+      const firstLine = cleanText(String(item.caption || '').split('\n')[0]);
       if (firstLine) return firstLine.length > 72 ? `${firstLine.slice(0, 71)}…` : firstLine;
       return `${item.category} • ${item.date}`;
     }
 
     function shortCaption(item) {
-      const text = String(item.excerpt || item.caption || '').replace(/\s+/g, ' ').trim();
+      const text = cleanText(String(item.excerpt || item.caption || '').replace(/\s+/g, ' ').trim());
       return text.length > 320 ? `${text.slice(0, 319)}…` : text;
     }
 
     function badgeFor(item) {
-      if (item.media_count > 1) return `${item.media_count} frames`;
-      return item.followup ? 'follow-up' : 'single';
+      return item.media_count > 1 ? `${item.media_count} frames` : (item.followup ? 'follow-up' : 'single');
+    }
+
+    function getMediaItems(item) {
+      const raw = Array.isArray(item.media) ? item.media : Array.isArray(item.assets) ? item.assets : [];
+      if (raw.length) {
+        return raw.map((asset, index) => {
+          if (typeof asset === 'string') {
+            const lower = asset.toLowerCase();
+            return { type: /\.(mp4|mov|webm)(\?|#|$)/.test(lower) ? 'video' : 'image', src: asset, alt: `${titleFromCaption(item)} ${index + 1}` };
+          }
+          const src = asset.src || asset.url || asset.poster || asset.path || '';
+          const type = (asset.type || (/\.(mp4|mov|webm)(\?|#|$)/.test(String(src).toLowerCase()) ? 'video' : 'image')).toLowerCase();
+          return { type, src, alt: asset.alt || asset.caption || `${titleFromCaption(item)} ${index + 1}` };
+        }).filter((asset) => asset.src);
+      }
+      return [{ type: 'image', src: item.poster, alt: titleFromCaption(item) }];
+    }
+
+    function currentMediaItems() {
+      return getMediaItems(POSTS[currentIndex] || {});
     }
 
     function renderFeatured() {
@@ -525,13 +429,11 @@
         featured.innerHTML = '';
         return;
       }
-
       featured.innerHTML = `
-        <article class="feature-card">
+        <article class="feature">
           <img src="${esc(item.poster)}" alt="Featured archive post" loading="eager" />
           <div class="fade"></div>
           <div class="content">
-            <div class="label">Featured post</div>
             <h3>${esc(titleFromCaption(item))}</h3>
             <div class="caption">${esc(shortCaption(item))}</div>
             <div class="tiny">
@@ -552,18 +454,9 @@
             <div class="post-badge">${esc(badgeFor(item))}</div>
           </div>
           <div class="post-body">
-            <div class="post-meta">
-              <span>${esc(item.date)}</span>
-              <span>${esc(item.category)}</span>
-              <span>${item.followup ? 'follow-up' : 'original'}</span>
-            </div>
+            <div class="post-meta"><span>${esc(item.date)}</span></div>
             <h4>${esc(titleFromCaption(item))}</h4>
             <p>${esc(shortCaption(item))}</p>
-            <div class="post-tags">
-              <span class="tag accent">${esc(item.category)}</span>
-              <span class="tag">${item.media_count} media</span>
-              <span class="tag">${item.followup ? 'follow-up / sequel' : 'original post'}</span>
-            </div>
           </div>
         </article>
       `).join('');
@@ -579,34 +472,53 @@
         });
       });
 
-      if (scrollLatest) {
-        scrollLatest.onclick = () => {
-          const first = feed.querySelector('.post');
-          first?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        };
+      scrollLatest.onclick = () => feed.querySelector('.post')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    function renderModalMedia() {
+      const item = POSTS[currentIndex];
+      if (!item) return;
+      const items = currentMediaItems();
+      const media = items[currentMediaIndex] || items[0];
+      modalStage.innerHTML = '';
+      if (!media) return;
+      if (media.type === 'video') {
+        const video = document.createElement('video');
+        video.src = media.src;
+        video.controls = true;
+        video.playsInline = true;
+        video.preload = 'metadata';
+        if (item.poster) video.poster = item.poster;
+        video.setAttribute('aria-label', media.alt || titleFromCaption(item));
+        modalStage.appendChild(video);
+      } else {
+        const img = document.createElement('img');
+        img.src = media.src;
+        img.alt = media.alt || titleFromCaption(item);
+        img.loading = 'eager';
+        modalStage.appendChild(img);
       }
+    }
+
+    function updateModal() {
+      const item = POSTS[currentIndex];
+      if (!item) return;
+      const items = currentMediaItems();
+      const media = items[currentMediaIndex] || items[0];
+      modalMeta.innerHTML = `
+        <span>${esc(item.date)}</span>
+        <span>${currentMediaIndex + 1}/${items.length}</span>
+        <span>${esc(media?.type === 'video' ? 'video' : 'image')}</span>
+      `;
+      modalTitle.textContent = titleFromCaption(item);
+      modalStory.textContent = String(item.caption || 'No caption available.');
+      renderModalMedia();
     }
 
     function openModal(index) {
       currentIndex = index;
-      const item = POSTS[index];
-      if (!item) return;
-
-      modalPoster.src = item.poster;
-      modalPoster.alt = titleFromCaption(item);
-      modalMeta.innerHTML = `
-        <span>${esc(item.date)}</span>
-        <span>${esc(item.category)}</span>
-        <span>${item.media_count} media</span>
-        <span>${item.followup ? 'follow-up' : 'original'}</span>
-      `;
-      modalTitle.textContent = titleFromCaption(item);
-      modalStory.textContent = String(item.caption || 'No caption available.');
-      modalTags.innerHTML = `
-        <span class="tag accent">${esc(item.category)}</span>
-        <span class="tag">${esc(item.shortcode)}</span>
-        <span class="tag">${item.media_count} media</span>
-      `;
+      currentMediaIndex = 0;
+      updateModal();
       modal.classList.add('open');
       modal.setAttribute('aria-hidden', 'false');
       document.body.style.overflow = 'hidden';
@@ -616,12 +528,36 @@
       modal.classList.remove('open');
       modal.setAttribute('aria-hidden', 'true');
       document.body.style.overflow = '';
+      swipeStartX = null;
+    }
+
+    function stepMedia(delta) {
+      const items = currentMediaItems();
+      if (items.length > 1) {
+        currentMediaIndex = (currentMediaIndex + delta + items.length) % items.length;
+      } else {
+        currentIndex = (currentIndex + delta + POSTS.length) % POSTS.length;
+        currentMediaIndex = 0;
+      }
+      updateModal();
     }
 
     modal.addEventListener('click', (e) => { if (e.target === modal) closeModal(); });
     modalClose.addEventListener('click', closeModal);
+    modalPrev.addEventListener('click', () => stepMedia(-1));
+    modalNext.addEventListener('click', () => stepMedia(1));
+    modalStage.addEventListener('pointerdown', (e) => { swipeStartX = e.clientX; });
+    modalStage.addEventListener('pointerup', (e) => {
+      if (swipeStartX == null) return;
+      const delta = e.clientX - swipeStartX;
+      swipeStartX = null;
+      if (Math.abs(delta) > 50) stepMedia(delta < 0 ? 1 : -1);
+    });
     document.addEventListener('keydown', (e) => {
       if (e.key === 'Escape') closeModal();
+      if (!modal.classList.contains('open')) return;
+      if (e.key === 'ArrowLeft') stepMedia(-1);
+      if (e.key === 'ArrowRight') stepMedia(1);
     });
 
     fetch(dataUrl)
@@ -629,21 +565,18 @@
       .then((data) => {
         CONTENT = data;
         POSTS = Array.isArray(data.posts) ? data.posts : [];
-
-        document.title = data.site?.title || 'Caleb Creative Archive';
-        document.getElementById('eyebrow').textContent = data.site?.hero?.eyebrow || 'Creative archive • CMS-backed feed';
+        document.title = data.site?.title || 'Creative Archive';
+        document.getElementById('eyebrow').textContent = data.site?.hero?.eyebrow || 'Creative archive • feed-first';
         document.getElementById('headline').textContent = data.site?.hero?.headline || 'Just scroll the work.';
         document.getElementById('lead').textContent = data.site?.hero?.lead || 'Media lives on-site in a simple, scroll-first archive.';
         document.getElementById('scope').textContent = data.site?.hero?.scope || 'All distinct work once';
-        document.getElementById('approach').textContent = data.site?.hero?.approach || 'Single-column, Instagram-style scroll';
-        document.getElementById('vibe').textContent = data.site?.hero?.vibe || 'Posts live in the site CMS feed';
-
+        document.getElementById('approach').textContent = data.site?.hero?.approach || 'Single-column scroll with swipe media';
+        document.getElementById('vibe').textContent = data.site?.hero?.vibe || 'CMS-driven, on-site only';
         postsCount.textContent = data.site?.stats?.posts ?? POSTS.length;
         mediaCount.textContent = data.site?.stats?.media ?? POSTS.reduce((sum, p) => sum + (p.media_count || 1), 0);
         imgVidCount.textContent = data.site?.stats?.images ?? '—';
         vidOnlyCount.textContent = data.site?.stats?.videos ?? '—';
         document.getElementById('resultCount').textContent = POSTS.length;
-
         renderFeatured();
         renderFeed();
       })

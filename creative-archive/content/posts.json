@@ -1,15 +1,15 @@
 {
   "site": {
-    "title": "Caleb Creative Archive",
-    "subtitle": "CMS-backed archive feed.",
+    "title": "Creative Archive",
+    "subtitle": "Feed-first archive.",
     "handle": "@calebcrtv",
     "hero": {
-      "eyebrow": "Creative archive • CMS-backed feed",
+      "eyebrow": "Creative archive • feed-first",
       "headline": "Just scroll the work.",
       "lead": "This page keeps the archive stupid simple: a single-column feed with media stored and viewed on-site, so the archive still works even if the original social posts disappear.",
       "scope": "All distinct work once",
-      "approach": "Single-column, Instagram-style scroll",
-      "vibe": "Posts live in the site CMS feed"
+      "approach": "Single-column scroll with swipe media",
+      "vibe": "CMS-driven, on-site only"
     },
     "stats": {
       "posts": 140,
