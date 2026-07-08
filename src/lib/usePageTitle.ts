@@ -1,6 +1,6 @@
 import { useEffect } from 'react'
 
-const SITE = 'Caleb Creative'
+const SITE = 'Caleb Elliott'
 const DEFAULT_DESC = 'Caleb Elliott is a filmmaker, photographer, and digital creative based in Georgia, USA. Wedding films, brand photography, web design, and more.'
 
 function setMeta(property: string, content: string) {
@@ -19,7 +19,7 @@ function setMeta(property: string, content: string) {
 
 export function usePageTitle(title?: string, description?: string) {
   useEffect(() => {
-    const fullTitle = title ? `${title} — ${SITE}` : `${SITE} — Filmmaker, Photographer & Digital Creative`
+    const fullTitle = title ? `${title} — ${SITE}` : `${SITE} — Filmmaker, Photographer & Digital Creative | Georgia, USA`
     const desc = description ?? DEFAULT_DESC
 
     document.title = fullTitle

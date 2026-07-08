@@ -1,8 +1,8 @@
 import { usePageTitle } from '@/lib/usePageTitle'
 import { Hero } from '@/components/home/Hero'
 import { FeaturedWork } from '@/components/home/FeaturedWork'
-import { ServicesTeaser } from '@/components/home/ServicesTeaser'
 import { AboutSnippet } from '@/components/home/AboutSnippet'
+import { ServicesTeaser } from '@/components/home/ServicesTeaser'
 import { CTAStrip } from '@/components/home/CTAStrip'
 
 export function HomePage() {
@@ -11,8 +11,8 @@ export function HomePage() {
     <div>
       <Hero />
       <FeaturedWork />
-      <ServicesTeaser />
       <AboutSnippet />
+      <ServicesTeaser />
       <CTAStrip />
     </div>
   )

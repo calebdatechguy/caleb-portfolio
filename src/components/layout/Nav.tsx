@@ -39,11 +39,11 @@ export function Nav() {
           <Link to="/" className="group flex items-baseline gap-3" onClick={() => setMobileOpen(false)}>
             <span className="font-sans text-base font-900 tracking-[0.12em] uppercase text-foreground group-hover:text-blue-bright transition-colors duration-300"
               style={{ fontWeight: 900 }}>
-              Caleb Creative
+              Caleb Elliott
             </span>
             <span className="hidden sm:block w-px h-3.5 bg-border self-center" />
             <span className="hidden sm:block font-sans text-[0.6rem] font-600 tracking-[0.28em] uppercase text-muted-foreground">
-              Lyko Digital
+              Filmmaker · Creative
             </span>
           </Link>
 
@@ -93,7 +93,7 @@ export function Nav() {
             {/* Top bar */}
             <div className="flex items-center justify-between h-20 px-6">
               <span className="font-sans text-base tracking-[0.12em] uppercase" style={{ fontWeight: 900 }}>
-                Caleb Creative
+                Caleb Elliott
               </span>
               <button onClick={() => setMobileOpen(false)} className="p-2 text-foreground">
                 <X className="w-5 h-5" />

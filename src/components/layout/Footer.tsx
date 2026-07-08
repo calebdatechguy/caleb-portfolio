@@ -23,25 +23,14 @@ export function Footer() {
                 className="font-sans text-xl text-foreground block"
                 style={{ fontWeight: 900, letterSpacing: '-0.01em' }}
               >
-                CALEB CREATIVE
+                CALEB ELLIOTT
               </span>
               <span className="label-tag text-muted-foreground mt-1 block">
                 Film · Photo · Digital
               </span>
             </Link>
             <p className="text-sm text-muted-foreground leading-relaxed max-w-xs">
-              Based in Georgia, USA. Creating cinematic work for couples, brands, and businesses that deserve to be remembered.
-            </p>
-            <p className="text-xs text-muted-foreground/50 mt-3">
-              Agency work under{' '}
-              <a
-                href="https://lykodigital.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-blue hover:text-blue-bright transition-colors"
-              >
-                Lyko Digital
-              </a>
+              Filmmaker, photographer, and digital creative based in Georgia, USA. Creating work for couples, brands, and businesses that deserve to be remembered.
             </p>
           </div>
 
@@ -119,7 +108,7 @@ export function Footer() {
         {/* Bottom bar */}
         <div className="border-t border-border pt-8 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
           <p className="label-tag text-muted-foreground/40">
-            © {new Date().getFullYear()} Caleb Creative. All rights reserved.
+            © {new Date().getFullYear()} Caleb Elliott. All rights reserved.
           </p>
           <p className="label-tag text-muted-foreground/30">
             Georgia, USA

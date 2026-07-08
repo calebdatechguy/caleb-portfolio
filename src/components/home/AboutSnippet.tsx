@@ -1,10 +1,8 @@
 import { useRef } from 'react'
-import { urlFor } from '@/lib/sanity'
-
-const ABOUT_PHOTO = { asset: { _ref: 'image-90573175ef52bb0f0aa18d69cf5edaa56ce66320-1024x1365-jpg' } }
 import { Link } from '@tanstack/react-router'
 import { motion, useInView } from 'framer-motion'
 import { ArrowUpRight } from 'lucide-react'
+import aboutPhoto from '@/assets/uploads/20584606_5389x5389_500-1783525762689-5rdmqf.jpg'
 
 export function AboutSnippet() {
   const ref = useRef<HTMLDivElement>(null)
@@ -26,7 +24,7 @@ export function AboutSnippet() {
             <div className="absolute -top-4 -left-4 w-1/2 h-1/2 bg-blue-muted z-0" />
             <div className="relative z-10 aspect-[3/4] overflow-hidden">
               <img
-                src={urlFor(ABOUT_PHOTO).width(900).quality(80).auto('format').url()}
+                src={aboutPhoto}
                 alt="Caleb Elliott"
                 className="w-full h-full object-cover"
                 loading="lazy"
@@ -53,14 +51,14 @@ export function AboutSnippet() {
               className="font-sans leading-none text-foreground mb-8"
               style={{ fontWeight: 800, fontSize: 'clamp(2rem, 4.5vw, 3.8rem)', letterSpacing: '-0.025em' }}
             >
-              THE PERSON<br />BEHIND THE<br />LENS
+              THE PERSON<br />BEHIND THE<br />WORK
             </h2>
 
             <p className="text-muted-foreground leading-relaxed mb-4 text-sm">
-              What's Up! I'm Caleb — a filmmaker, photographer, and digital creative based in Athens, Georgia. I love making dreams reality, and making your vision come true.
+              What's up — I'm Caleb Elliott. Filmmaker, photographer, and digital creative based in Georgia. I've been building things since I was 8 years old and I haven't stopped.
             </p>
             <p className="text-muted-foreground leading-relaxed mb-10 text-sm">
-              From wedding films that you will show your kids, to branding campaigns, I like to shake things up from the original.
+              Whether it's a wedding film your kids will watch one day, a brand campaign that actually says something, or a website built to last — I put the same care into all of it.
             </p>
 
             <Link

@@ -75,21 +75,24 @@ export function FeaturedWork() {
 
         {/* Bento-style grid */}
         <div className="grid grid-cols-1 md:grid-cols-12 gap-3 md:gap-4">
-          {projects.slice(0, 5).map((project, i) => {
-            // Layout: first card is large (spans 7 cols), second spans 5, then 4+4+4
+          {projects.slice(0, 6).map((project, i) => {
+            // 0: large left hero (7 cols, 2 rows) | 1, 2: right column (5 cols each)
+            // 3, 4, 5: three equal bottom columns (4 cols each)
             const colSpanMap: Record<number, string> = {
               0: 'md:col-span-7 md:row-span-2',
               1: 'md:col-span-5',
               2: 'md:col-span-5',
               3: 'md:col-span-4',
-              4: 'md:col-span-8',
+              4: 'md:col-span-4',
+              5: 'md:col-span-4',
             }
             const heightMap: Record<number, string> = {
-              0: 'h-72 md:h-auto md:min-h-[520px]',
-              1: 'h-64 md:h-60',
-              2: 'h-64 md:h-60',
+              0: 'h-72 md:h-auto md:min-h-[540px]',
+              1: 'h-64 md:h-64',
+              2: 'h-64 md:h-64',
               3: 'h-64 md:h-56',
               4: 'h-64 md:h-56',
+              5: 'h-64 md:h-56',
             }
 
             return (
@@ -124,7 +127,7 @@ export function FeaturedWork() {
                     </div>
                     <h3
                       className="font-sans text-white leading-tight transition-all duration-400"
-                      style={{ fontWeight: 700, fontSize: i === 0 ? '1.4rem' : '1rem', letterSpacing: '-0.01em' }}
+                      style={{ fontWeight: 700, fontSize: i === 0 ? '1.45rem' : i < 3 ? '1.05rem' : '0.95rem', letterSpacing: '-0.01em' }}
                     >
                       {project.title}
                     </h3>

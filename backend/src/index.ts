@@ -1,17 +1,11 @@
 import { Hono } from 'hono'
-import nodemailer from 'nodemailer'
+import { Resend } from 'resend'
 
 const app = new Hono()
 
-const transporter = nodemailer.createTransport({
-  host: 'smtp.zoho.com',
-  port: 465,
-  secure: true,
-  auth: {
-    user: process.env.ZOHO_EMAIL,
-    pass: process.env.ZOHO_PASSWORD,
-  },
-})
+const resend = new Resend(process.env.RESEND_API_KEY)
+const FROM_ADDRESS = 'Caleb Elliott <onboarding@resend.dev>'
+const NOTIFY_TO = ['calebelliott933@gmail.com', 'caleb@lykodigital.com']
 
 app.get('/health', (c) => {
   return c.json({ status: 'ok', timestamp: new Date().toISOString() })
@@ -29,7 +23,6 @@ app.post('/api/contact', async (c) => {
     const serviceLabel = service || 'Not specified'
     const dateLabel = date || 'Not specified'
     const budgetLabel = budget || 'Not specified'
-
     const submittedAt = new Date().toLocaleString('en-US', {
       timeZone: 'America/New_York',
       weekday: 'long',
@@ -41,16 +34,16 @@ app.post('/api/contact', async (c) => {
       timeZoneName: 'short',
     })
 
-    // --- Notification email to Caleb ---
-    await transporter.sendMail({
-      from: `"Caleb Creative" <${process.env.ZOHO_EMAIL}>`,
-      to: ['calebelliott933@gmail.com', 'caleb@lykodigital.com'],
-      replyTo: email,
+    // Notification email
+    await resend.emails.send({
+      from: FROM_ADDRESS,
+      to: NOTIFY_TO,
+      reply_to: email,
       subject: `New inquiry from ${name}`,
       html: `
         <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; color: #111;">
-          <div style="background: #0a0f2e; padding: 32px; margin-bottom: 0;">
-            <h1 style="color: #fff; font-size: 22px; margin: 0; letter-spacing: -0.02em;">CALEB CREATIVE</h1>
+          <div style="background: #0a0f2e; padding: 32px;">
+            <h1 style="color: #fff; font-size: 22px; margin: 0; letter-spacing: -0.02em;">CALEB ELLIOTT</h1>
             <p style="color: #4a6cf7; font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; margin: 4px 0 0;">New Contact Form Submission</p>
           </div>
           <div style="background: #f9f9f9; padding: 32px; border: 1px solid #e5e7eb;">
@@ -84,25 +77,23 @@ app.post('/api/contact', async (c) => {
               <a href="mailto:${email}?subject=Re: Your inquiry" style="display: inline-block; background: #4a6cf7; color: #fff; text-decoration: none; padding: 12px 24px; font-size: 13px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;">Reply to ${name}</a>
             </div>
           </div>
-          <p style="color: #9ca3af; font-size: 11px; padding: 16px; text-align: center;">Caleb Creative · Georgia, USA · caleb@lykodigital.com</p>
+          <p style="color: #9ca3af; font-size: 11px; padding: 16px; text-align: center;">Caleb Elliott · Georgia, USA · caleb@lykodigital.com</p>
         </div>
       `,
     })
 
-    // --- Submission details email to Caleb (clean data sheet) ---
-    await transporter.sendMail({
-      from: `"Caleb Creative" <${process.env.ZOHO_EMAIL}>`,
-      to: ['calebelliott933@gmail.com', 'caleb@lykodigital.com'],
-      replyTo: email,
+    // Submission details sheet
+    await resend.emails.send({
+      from: FROM_ADDRESS,
+      to: NOTIFY_TO,
+      reply_to: email,
       subject: `📋 Submission Details — ${name}`,
       html: `
         <div style="font-family: 'Courier New', Courier, monospace; max-width: 580px; margin: 0 auto; background: #fff; border: 2px solid #111; padding: 40px;">
-          <p style="font-size: 11px; text-transform: uppercase; letter-spacing: 0.25em; color: #888; margin: 0 0 4px;">Caleb Creative · Contact Form</p>
+          <p style="font-size: 11px; text-transform: uppercase; letter-spacing: 0.25em; color: #888; margin: 0 0 4px;">Caleb Elliott · Contact Form</p>
           <h1 style="font-size: 22px; font-weight: 900; margin: 0 0 4px; letter-spacing: -0.01em; font-family: sans-serif;">Submission Details</h1>
           <p style="font-size: 12px; color: #888; margin: 0 0 32px;">${submittedAt}</p>
-
           <hr style="border: none; border-top: 2px solid #111; margin: 0 0 28px;" />
-
           <table style="width: 100%; border-collapse: collapse; font-size: 14px;">
             <tr style="vertical-align: top;">
               <td style="padding: 10px 16px 10px 0; color: #888; white-space: nowrap; width: 120px;">NAME</td>
@@ -125,28 +116,24 @@ app.post('/api/contact', async (c) => {
               <td style="padding: 10px 0; color: #111;">${budgetLabel}</td>
             </tr>
           </table>
-
           <hr style="border: none; border-top: 1px solid #ddd; margin: 20px 0;" />
-
           <p style="font-size: 11px; text-transform: uppercase; letter-spacing: 0.15em; color: #888; margin: 0 0 10px;">Message</p>
           <p style="font-size: 14px; line-height: 1.8; color: #111; margin: 0 0 32px; white-space: pre-wrap; background: #f9f9f9; padding: 16px; border-left: 3px solid #111;">${message}</p>
-
           <hr style="border: none; border-top: 2px solid #111; margin: 0 0 20px;" />
-
           <a href="mailto:${email}?subject=Re: Your inquiry" style="display: inline-block; background: #111; color: #fff; text-decoration: none; padding: 12px 28px; font-size: 12px; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; font-family: sans-serif;">Reply to ${name}</a>
         </div>
       `,
     })
 
-    // --- Auto-reply to the person who submitted ---
-    await transporter.sendMail({
-      from: `"Caleb Elliott" <${process.env.ZOHO_EMAIL}>`,
+    // Auto-reply to submitter
+    await resend.emails.send({
+      from: FROM_ADDRESS,
       to: [email],
       subject: `Got your message, ${name.split(' ')[0]}!`,
       html: `
         <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; color: #111;">
           <div style="background: #0a0f2e; padding: 32px;">
-            <h1 style="color: #fff; font-size: 22px; margin: 0; letter-spacing: -0.02em;">CALEB CREATIVE</h1>
+            <h1 style="color: #fff; font-size: 22px; margin: 0; letter-spacing: -0.02em;">CALEB ELLIOTT</h1>
             <p style="color: #4a6cf7; font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; margin: 4px 0 0;">Film · Photo · Digital</p>
           </div>
           <div style="padding: 40px 32px; background: #fff; border: 1px solid #e5e7eb; border-top: none;">
@@ -160,7 +147,7 @@ app.post('/api/contact', async (c) => {
             <a href="https://calebcreative.com/portfolio" style="display: inline-block; background: #0a0f2e; color: #fff; text-decoration: none; padding: 12px 24px; font-size: 12px; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; margin-right: 12px;">View Portfolio</a>
             <a href="https://instagram.com/calebcrtv" style="display: inline-block; border: 1px solid #0a0f2e; color: #0a0f2e; text-decoration: none; padding: 12px 24px; font-size: 12px; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase;">@calebcrtv</a>
           </div>
-          <p style="color: #9ca3af; font-size: 11px; padding: 16px; text-align: center;">Caleb Creative · Georgia, USA · caleb@lykodigital.com</p>
+          <p style="color: #9ca3af; font-size: 11px; padding: 16px; text-align: center;">Caleb Elliott · Georgia, USA · caleb@lykodigital.com</p>
         </div>
       `,
     })

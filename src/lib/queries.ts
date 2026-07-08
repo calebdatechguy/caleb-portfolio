@@ -34,7 +34,7 @@ export const ALL_PROJECTS_QUERY = `
 `
 
 export const FEATURED_PROJECTS_QUERY = `
-  *[_type == "project" && featured == true] | order(publishedAt desc)[0...6] {
+  *[_type == "project" && featured == true] | order(publishedAt desc)[0...6]{
     ${PROJECT_CARD_FIELDS}
   }
 `

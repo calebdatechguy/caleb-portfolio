@@ -45,7 +45,7 @@ const serviceGroups = [
 ]
 
 export function ServicesPage() {
-  usePageTitle('Services', 'Film & video production, photography, web design, and brand identity services by Caleb Elliott — Caleb Creative & Lyko Digital, Georgia.')
+  usePageTitle('Services', 'Film & video production, photography, web design, and brand identity services by Caleb Elliott — based in Georgia, USA.')
   const headerRef = useRef<HTMLDivElement>(null)
   const headerInView = useInView(headerRef, { once: true })
 

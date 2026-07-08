@@ -5,7 +5,7 @@ import { schemaTypes } from './src/sanity/schema'
 
 export default defineConfig({
   name: 'caleb-creative',
-  title: 'Caleb Creative',
+  title: 'Caleb Elliott',
 
   projectId: 'u8jnmsuy',
   dataset: 'production',

@@ -9,7 +9,7 @@ export const siteSettingsSchema = defineType({
       name: 'siteTitle',
       title: 'Site Title',
       type: 'string',
-      initialValue: 'Caleb Creative',
+      initialValue: 'Caleb Elliott',
     }),
     defineField({
       name: 'seoDescription',
@@ -27,7 +27,7 @@ export const siteSettingsSchema = defineType({
       name: 'heroHeadline',
       title: 'Hero Headline',
       type: 'string',
-      initialValue: 'Caleb Creative',
+      initialValue: 'Caleb Elliott',
     }),
     defineField({
       name: 'heroSubline',

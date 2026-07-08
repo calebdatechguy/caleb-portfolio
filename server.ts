@@ -58,14 +58,14 @@ async function handleContact(req: Request): Promise<Response> {
 
     // Notification email
     await resend.emails.send({
-      from: 'Caleb Creative <onboarding@resend.dev>',
+      from: 'Caleb Elliott <onboarding@resend.dev>',
       to: ['calebelliott933@gmail.com', 'caleb@lykodigital.com'],
       reply_to: email,
       subject: `New inquiry from ${name}`,
       html: `
         <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; color: #111;">
           <div style="background: #0a0f2e; padding: 32px;">
-            <h1 style="color: #fff; font-size: 22px; margin: 0; letter-spacing: -0.02em;">CALEB CREATIVE</h1>
+            <h1 style="color: #fff; font-size: 22px; margin: 0; letter-spacing: -0.02em;">CALEB ELLIOTT</h1>
             <p style="color: #4a6cf7; font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; margin: 4px 0 0;">New Contact Form Submission</p>
           </div>
           <div style="background: #f9f9f9; padding: 32px; border: 1px solid #e5e7eb;">
@@ -99,20 +99,20 @@ async function handleContact(req: Request): Promise<Response> {
               <a href="mailto:${email}?subject=Re: Your inquiry" style="display: inline-block; background: #4a6cf7; color: #fff; text-decoration: none; padding: 12px 24px; font-size: 13px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;">Reply to ${name}</a>
             </div>
           </div>
-          <p style="color: #9ca3af; font-size: 11px; padding: 16px; text-align: center;">Caleb Creative · Georgia, USA · caleb@lykodigital.com</p>
+          <p style="color: #9ca3af; font-size: 11px; padding: 16px; text-align: center;">Caleb Elliott · Georgia, USA · caleb@lykodigital.com</p>
         </div>
       `,
     })
 
     // Submission details sheet
     await resend.emails.send({
-      from: 'Caleb Creative <onboarding@resend.dev>',
+      from: 'Caleb Elliott <onboarding@resend.dev>',
       to: ['calebelliott933@gmail.com', 'caleb@lykodigital.com'],
       reply_to: email,
       subject: `📋 Submission Details — ${name}`,
       html: `
         <div style="font-family: 'Courier New', Courier, monospace; max-width: 580px; margin: 0 auto; background: #fff; border: 2px solid #111; padding: 40px;">
-          <p style="font-size: 11px; text-transform: uppercase; letter-spacing: 0.25em; color: #888; margin: 0 0 4px;">Caleb Creative · Contact Form</p>
+          <p style="font-size: 11px; text-transform: uppercase; letter-spacing: 0.25em; color: #888; margin: 0 0 4px;">Caleb Elliott · Contact Form</p>
           <h1 style="font-size: 22px; font-weight: 900; margin: 0 0 4px; letter-spacing: -0.01em; font-family: sans-serif;">Submission Details</h1>
           <p style="font-size: 12px; color: #888; margin: 0 0 32px;">${submittedAt}</p>
           <hr style="border: none; border-top: 2px solid #111; margin: 0 0 28px;" />
@@ -155,7 +155,7 @@ async function handleContact(req: Request): Promise<Response> {
       html: `
         <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; color: #111;">
           <div style="background: #0a0f2e; padding: 32px;">
-            <h1 style="color: #fff; font-size: 22px; margin: 0; letter-spacing: -0.02em;">CALEB CREATIVE</h1>
+            <h1 style="color: #fff; font-size: 22px; margin: 0; letter-spacing: -0.02em;">CALEB ELLIOTT</h1>
             <p style="color: #4a6cf7; font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; margin: 4px 0 0;">Film · Photo · Digital</p>
           </div>
           <div style="padding: 40px 32px; background: #fff; border: 1px solid #e5e7eb; border-top: none;">
@@ -169,7 +169,7 @@ async function handleContact(req: Request): Promise<Response> {
             <a href="https://calebcreative.com/portfolio" style="display: inline-block; background: #0a0f2e; color: #fff; text-decoration: none; padding: 12px 24px; font-size: 12px; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; margin-right: 12px;">View Portfolio</a>
             <a href="https://instagram.com/calebcrtv" style="display: inline-block; border: 1px solid #0a0f2e; color: #0a0f2e; text-decoration: none; padding: 12px 24px; font-size: 12px; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase;">@calebcrtv</a>
           </div>
-          <p style="color: #9ca3af; font-size: 11px; padding: 16px; text-align: center;">Caleb Creative · Georgia, USA · caleb@lykodigital.com</p>
+          <p style="color: #9ca3af; font-size: 11px; padding: 16px; text-align: center;">Caleb Elliott · Georgia, USA · caleb@lykodigital.com</p>
         </div>
       `,
     })

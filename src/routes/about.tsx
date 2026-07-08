@@ -3,9 +3,7 @@ import { Link } from '@tanstack/react-router'
 import { motion, useInView } from 'framer-motion'
 import { ArrowUpRight } from 'lucide-react'
 import { usePageTitle } from '@/lib/usePageTitle'
-import { urlFor } from '@/lib/sanity'
-
-const ABOUT_HERO_IMAGE = { asset: { _ref: 'image-90573175ef52bb0f0aa18d69cf5edaa56ce66320-1024x1365-jpg' } }
+import aboutHeroImage from '@/assets/uploads/20584606_5389x5389_500-1783525762689-5rdmqf.jpg'
 
 const gear = [
   { category: 'Video', items: ['Cinematography', 'Wedding Films', 'Commercial Production', 'Sports Hype Videos', 'Short Form Content', 'Drone Footage'] },
@@ -15,7 +13,7 @@ const gear = [
 ]
 
 export function AboutPage() {
-  usePageTitle('About', 'Caleb Elliott is a filmmaker, photographer, and digital creative based in Georgia, USA — the person behind Caleb Creative and Lyko Digital.')
+  usePageTitle('About', 'Caleb Elliott is a filmmaker, photographer, and digital creative based in Georgia, USA. Wedding films, brand photography, web design, and more.')
   const heroRef = useRef<HTMLDivElement>(null)
   const bioRef = useRef<HTMLDivElement>(null)
   const gearRef = useRef<HTMLDivElement>(null)
@@ -29,7 +27,7 @@ export function AboutPage() {
       {/* Hero — full bleed */}
       <div ref={heroRef} className="relative h-[80vh] overflow-hidden">
         <img
-          src={urlFor(ABOUT_HERO_IMAGE).width(1800).quality(80).auto('format').url()}
+          src={aboutHeroImage}
           alt="Caleb Elliott"
           className="w-full h-full object-cover object-top"
           style={{ filter: 'brightness(0.35) saturate(0.6)' }}
@@ -81,10 +79,10 @@ export function AboutPage() {
                 What's up! My name is Caleb Elliott — an entrepreneur at heart, photographer, filmmaker, and digital creative based in Georgia, USA. Since I was 8 years old, I've been creating businesses, digital assets, websites, videos, all kinds of stuff.
               </p>
               <p>
-                I started Caleb Creative as an outlet for my work, but it has since scaled into multiple different entities, and a great way for me to help people who want their vision to come alive. Everything is intentional.
+                My work has scaled into multiple different entities, and it's become a great way for me to help people who want their vision to come alive. I also own Lyko Digital, where I handle agency-level web and brand work.
               </p>
               <p>
-                Caleb Creative is a division under Lyko Digital, a company I also own.
+                Everything I create is intentional — made to last.
               </p>
             </div>
           </motion.div>
