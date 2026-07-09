@@ -10,6 +10,7 @@ import { CategoryFilter } from '@/components/portfolio/CategoryFilter'
 import { ProjectCard } from '@/components/portfolio/ProjectCard'
 import { projects as staticProjects, categoryLabels, type ProjectCategory } from '@/data/portfolio'
 import type { Project } from '@/data/portfolio'
+import { groupToCategories, groupLabels, isPortfolioGroup } from '@/lib/portfolioGroups'
 
 type FilterValue = ProjectCategory | 'all'
 
@@ -35,8 +36,9 @@ export function PortfolioPage() {
   usePageTitle('Portfolio', 'Browse the full body of work — wedding films, photography, commercial video, web design, and brand identity by Caleb Elliott in Georgia, USA.')
 
   const navigate = useNavigate()
-  const searchParams = useSearch({ strict: false }) as { category?: string }
+  const searchParams = useSearch({ strict: false }) as { category?: string; group?: string }
   const urlCategory = (searchParams?.category as FilterValue) || 'all'
+  const urlGroup = isPortfolioGroup(searchParams?.group) ? searchParams.group : null
   const [active, setActive] = useState<FilterValue>(urlCategory)
 
   useEffect(() => { setActive(urlCategory) }, [urlCategory])
@@ -65,9 +67,13 @@ export function PortfolioPage() {
   }
 
   const filtered = useMemo(() => {
+    if (urlGroup && active === 'all') {
+      const cats = new Set<string>(groupToCategories[urlGroup])
+      return allProjects.filter((p) => cats.has(p.category))
+    }
     if (active === 'all') return allProjects
     return allProjects.filter((p) => p.category === active)
-  }, [active, allProjects])
+  }, [active, allProjects, urlGroup])
 
   const counts = useMemo(() => {
     const c: Record<string, number> = { all: allProjects.length }
@@ -92,10 +98,10 @@ export function PortfolioPage() {
           transition={{ duration: 0.6 }}
           className="mb-14 border-b border-border pb-10"
         >
-          <p className="label-tag text-blue mb-5">Portfolio</p>
+          <p className="label-tag text-blue mb-5">{urlGroup ? groupLabels[urlGroup] : 'Portfolio'}</p>
           <h1 className="font-sans text-foreground leading-none mb-6"
             style={{ fontWeight: 900, fontSize: 'clamp(2.8rem, 8vw, 7rem)', letterSpacing: '-0.03em' }}>
-            THE WORK
+            {urlGroup ? groupLabels[urlGroup].toUpperCase() : 'THE WORK'}
           </h1>
           <p className="text-muted-foreground text-sm max-w-lg leading-relaxed">
             A full body of work spanning wedding films, photography, commercial video, web design, and brand identity.
