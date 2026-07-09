@@ -1,8 +1,6 @@
 node_modules
 dist
 .vite
-src/assets/uploads/
-assets/uploads/
 .env
 
 # Backend
