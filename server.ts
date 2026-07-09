@@ -33,6 +33,56 @@ function mime(path: string): string {
 
 const resend = new Resend(process.env.RESEND_API_KEY)
 
+// Resend sandbox restriction: until a custom domain is verified, we can
+// only deliver to the account owner's email. Multi-recipient sends or
+// auto-replies to submitters are silently 403'd.
+const OWNER_EMAIL = 'calebelliott933@gmail.com'
+const FROM_ADDRESS = 'Caleb Elliott <onboarding@resend.dev>'
+
+// ClickUp backup — creates a task in the configured list whenever the
+// form is submitted. Fire-and-forget: never blocks the response and
+// never fails the request even if ClickUp is down or misconfigured.
+async function createClickUpTask(payload: {
+  name: string
+  email: string
+  service: string
+  date: string
+  budget: string
+  message: string
+  submittedAt: string
+}) {
+  const token = process.env.CLICKUP_API_TOKEN
+  const listId = process.env.CLICKUP_LIST_ID
+  if (!token || !listId) return
+
+  try {
+    const res = await fetch(`https://api.clickup.com/api/v2/list/${listId}/task`, {
+      method: 'POST',
+      headers: { Authorization: token, 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        name: `Inquiry — ${payload.name}${payload.service !== 'Not specified' ? ` (${payload.service})` : ''}`,
+        markdown_description: [
+          `**From:** ${payload.name} — ${payload.email}`,
+          `**Service:** ${payload.service}`,
+          `**Date:** ${payload.date}`,
+          `**Budget:** ${payload.budget}`,
+          `**Submitted:** ${payload.submittedAt}`,
+          '',
+          '---',
+          '',
+          payload.message,
+        ].join('\n'),
+        tags: ['contact-form'],
+      }),
+    })
+    if (!res.ok) {
+      console.error('ClickUp task creation failed:', res.status, await res.text())
+    }
+  } catch (err) {
+    console.error('ClickUp task creation error:', err)
+  }
+}
+
 async function handleContact(req: Request): Promise<Response> {
   try {
     const body = await req.json()
@@ -56,10 +106,13 @@ async function handleContact(req: Request): Promise<Response> {
       timeZoneName: 'short',
     })
 
+    // Fire-and-forget ClickUp backup task — never blocks the email flow
+    createClickUpTask({ name, email, service: serviceLabel, date: dateLabel, budget: budgetLabel, message, submittedAt })
+
     // Notification email
-    await resend.emails.send({
-      from: 'Caleb Elliott <onboarding@resend.dev>',
-      to: ['calebelliott933@gmail.com', 'caleb@lykodigital.com'],
+    const notifyRes = await resend.emails.send({
+      from: FROM_ADDRESS,
+      to: [OWNER_EMAIL],
       reply_to: email,
       subject: `New inquiry from ${name}`,
       html: `
@@ -104,10 +157,12 @@ async function handleContact(req: Request): Promise<Response> {
       `,
     })
 
+    if (notifyRes.error) console.error('Resend notification error:', notifyRes.error)
+
     // Submission details sheet
-    await resend.emails.send({
-      from: 'Caleb Elliott <onboarding@resend.dev>',
-      to: ['calebelliott933@gmail.com', 'caleb@lykodigital.com'],
+    const detailsRes = await resend.emails.send({
+      from: FROM_ADDRESS,
+      to: [OWNER_EMAIL],
       reply_to: email,
       subject: `📋 Submission Details — ${name}`,
       html: `
@@ -147,9 +202,16 @@ async function handleContact(req: Request): Promise<Response> {
       `,
     })
 
-    // Auto-reply to submitter
-    await resend.emails.send({
-      from: 'Caleb Elliott <onboarding@resend.dev>',
+    if (detailsRes.error) console.error('Resend details error:', detailsRes.error)
+
+    // Auto-reply to submitter — Resend sandbox blocks sends to anyone but
+    // the account owner, so skip unless the submitter is the owner.
+    // TODO: remove this guard once a custom domain is verified in Resend.
+    if (email.toLowerCase() !== OWNER_EMAIL) {
+      return Response.json({ success: true })
+    }
+    const replyRes = await resend.emails.send({
+      from: FROM_ADDRESS,
       to: [email],
       subject: `Got your message, ${name.split(' ')[0]}!`,
       html: `
@@ -173,6 +235,7 @@ async function handleContact(req: Request): Promise<Response> {
         </div>
       `,
     })
+    if (replyRes.error) console.error('Resend auto-reply error:', replyRes.error)
 
     return Response.json({ success: true })
   } catch (err) {

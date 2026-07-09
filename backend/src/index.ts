@@ -5,7 +5,35 @@ const app = new Hono()
 
 const resend = new Resend(process.env.RESEND_API_KEY)
 const FROM_ADDRESS = 'Caleb Elliott <onboarding@resend.dev>'
-const NOTIFY_TO = ['calebelliott933@gmail.com', 'caleb@lykodigital.com']
+const OWNER_EMAIL = 'calebelliott933@gmail.com'
+const NOTIFY_TO = [OWNER_EMAIL]
+
+async function createClickUpTask(payload: {
+  name: string; email: string; service: string; date: string; budget: string; message: string; submittedAt: string
+}) {
+  const token = process.env.CLICKUP_API_TOKEN
+  const listId = process.env.CLICKUP_LIST_ID
+  if (!token || !listId) return
+  try {
+    const res = await fetch(`https://api.clickup.com/api/v2/list/${listId}/task`, {
+      method: 'POST',
+      headers: { Authorization: token, 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        name: `Inquiry — ${payload.name}${payload.service !== 'Not specified' ? ` (${payload.service})` : ''}`,
+        markdown_description: [
+          `**From:** ${payload.name} — ${payload.email}`,
+          `**Service:** ${payload.service}`,
+          `**Date:** ${payload.date}`,
+          `**Budget:** ${payload.budget}`,
+          `**Submitted:** ${payload.submittedAt}`,
+          '', '---', '', payload.message,
+        ].join('\n'),
+        tags: ['contact-form'],
+      }),
+    })
+    if (!res.ok) console.error('ClickUp task creation failed:', res.status, await res.text())
+  } catch (err) { console.error('ClickUp task creation error:', err) }
+}
 
 app.get('/health', (c) => {
   return c.json({ status: 'ok', timestamp: new Date().toISOString() })
@@ -33,6 +61,8 @@ app.post('/api/contact', async (c) => {
       minute: '2-digit',
       timeZoneName: 'short',
     })
+
+    createClickUpTask({ name, email, service: serviceLabel, date: dateLabel, budget: budgetLabel, message, submittedAt })
 
     // Notification email
     await resend.emails.send({
@@ -125,7 +155,12 @@ app.post('/api/contact', async (c) => {
       `,
     })
 
-    // Auto-reply to submitter
+    // Auto-reply — Resend sandbox blocks non-owner recipients, so skip
+    // unless the submitter IS the owner. Remove once a custom domain
+    // is verified in Resend.
+    if (email.toLowerCase() !== OWNER_EMAIL) {
+      return c.json({ success: true })
+    }
     await resend.emails.send({
       from: FROM_ADDRESS,
       to: [email],
