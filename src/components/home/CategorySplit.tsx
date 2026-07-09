@@ -65,18 +65,6 @@ export function CategorySplit() {
 
   return (
     <section ref={ref} className="relative w-full h-screen min-h-[600px] overflow-hidden bg-background">
-      {/* Section label — floats over the top */}
-      <motion.div
-        initial={{ opacity: 0, y: 12 }}
-        animate={inView ? { opacity: 1, y: 0 } : {}}
-        transition={{ duration: 0.6 }}
-        className="absolute top-8 left-1/2 -translate-x-1/2 z-30 flex items-center gap-4"
-      >
-        <span className="w-8 h-px bg-blue" />
-        <span className="label-tag text-blue">Choose Your Lens</span>
-        <span className="w-8 h-px bg-blue" />
-      </motion.div>
-
       <div className="grid grid-cols-1 md:grid-cols-3 w-full h-full">
         {PANELS.map((panel, index) => {
           const cats = groupToCategories[panel.group]
